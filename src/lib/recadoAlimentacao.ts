@@ -1,7 +1,8 @@
-// Recado do Luca: um resumo de como está a alimentação da criança nos ÚLTIMOS 7 DIAS
+// Recado sobre a alimentação: um resumo de como a criança comeu nos ÚLTIMOS 7 DIAS
 // (hoje e os 6 dias antes), feito a partir das refeições registradas. Só cálculo, sem Firebase.
+// Quem fala é o personagem da criança: o Luca (avatar 1) ou a Alice (avatar 2).
 //
-// O recado tem: uma frase de abertura, o que está indo bem, o que merece atenção e uma dica.
+// O recado tem: uma frase de abertura, o que está indo bem e o que merece atenção.
 // Arroz e feijão têm um aviso próprio quando faltam (a dupla é a base do prato brasileiro).
 import { paraData } from './tempo';
 import { grupoDoAlimento } from './gruposAlimentares';
@@ -9,17 +10,24 @@ import type { IdGrupo } from './gruposAlimentares';
 import type { Refeicao } from '../types';
 
 export const DIAS_DO_RECADO = 7;
-const MIN_PARA_AVALIAR = 3; // com menos refeições, o Luca só pede mais registros
+const MIN_PARA_AVALIAR = 3; // com menos refeições, o personagem só pede mais registros
 
 export type ClimaRecado = 'otimo' | 'bom' | 'atencao' | 'sem_dados';
 
-export interface RecadoLuca {
+export type Narrador = 'luca' | 'alice';
+
+// O personagem que a criança escolheu no cadastro: avatar 2 é a Alice; o resto (avatar 1 ou sem avatar), o Luca
+export function narradorDoAvatar(avatar: string | number | undefined): Narrador {
+  return String(avatar) === '2' ? 'alice' : 'luca';
+}
+
+export interface RecadoAlimentacao {
   clima: ClimaRecado;
   rotuloClima: string; // "Semana ótima!", "Semana boa", "Dá para melhorar"
   abertura: string;
   positivos: string[];
   atencao: string[];
-  dica: string;
+  pctComeuTudo: number | null; // % de "comeu tudo" nas refeições anotadas
   refeicoes: number; // quantas refeições entraram
   dias: number; // em quantos dos 7 dias houve registro
 }
@@ -39,7 +47,8 @@ export function refeicoesDosUltimos7Dias(refeicoes: Refeicao[], agora: Date = ne
 // "comeu" = qualquer status menos "não comeu" (sem anotação conta como comeu)
 const comeu = (r: Refeicao) => r.status !== 'nao_comeu';
 
-export function gerarRecadoLuca(todas: Refeicao[], nome: string, agora: Date = new Date()): RecadoLuca {
+export function gerarRecado(todas: Refeicao[], nome: string, narrador: Narrador, agora: Date = new Date()): RecadoAlimentacao {
+  const oi = narrador === 'alice' ? 'Oi! Eu sou a Alice.' : 'Oi! Eu sou o Luca.';
   const lista = refeicoesDosUltimos7Dias(todas, agora);
   const n = lista.length;
   const dias = new Set(lista.map((r) => {
@@ -49,16 +58,14 @@ export function gerarRecadoLuca(todas: Refeicao[], nome: string, agora: Date = n
 
   if (n === 0) {
     return {
-      clima: 'sem_dados', rotuloClima: 'Sem refeições na semana', refeicoes: 0, dias: 0, positivos: [], atencao: [],
-      abertura: `Oi! Eu sou o Luca. Ainda não tem nenhuma refeição de ${nome} registrada nos últimos 7 dias.`,
-      dica: 'Registre as refeições em "Registrar refeições" e eu conto aqui como está a alimentação!'
+      clima: 'sem_dados', rotuloClima: 'Sem refeições', refeicoes: 0, dias: 0, positivos: [], atencao: [], pctComeuTudo: null,
+      abertura: `${oi} Ainda não tem nenhuma refeição de ${nome} registrada nos últimos 7 dias. Registre as refeições e eu conto aqui como está a alimentação!`
     };
   }
   if (n < MIN_PARA_AVALIAR) {
     return {
-      clima: 'sem_dados', rotuloClima: 'Poucas refeições', refeicoes: n, dias, positivos: [], atencao: [],
-      abertura: `Oi! Eu sou o Luca. Nos últimos 7 dias só ${n === 1 ? 'tem 1 refeição registrada' : `tem ${n} refeições registradas`} de ${nome}.`,
-      dica: `Com pelo menos ${MIN_PARA_AVALIAR} refeições eu já consigo dizer como está a alimentação. Continue registrando!`
+      clima: 'sem_dados', rotuloClima: 'Poucas refeições', refeicoes: n, dias, positivos: [], atencao: [], pctComeuTudo: null,
+      abertura: `${oi} Nos últimos 7 dias só ${n === 1 ? 'tem 1 refeição registrada' : `tem ${n} refeições registradas`} de ${nome}. Com pelo menos ${MIN_PARA_AVALIAR} eu já consigo dizer como está a alimentação!`
     };
   }
 
@@ -149,27 +156,19 @@ export function gerarRecadoLuca(todas: Refeicao[], nome: string, agora: Date = n
     atencao.push(`${nome} não comeu em ${pctNaoComeu}% das refeições anotadas. Vale ver se está com fome nos horários das refeições.`);
   }
   if (maisRecusado && maisRecusado.vezes >= 2) {
-    atencao.push(`${maisRecusado.nome.charAt(0).toUpperCase() + maisRecusado.nome.slice(1)} foi recusado ${vezesTxt(maisRecusado.vezes)}. Tente oferecer de outro jeito (em pedacinhos, assado, junto com algo que ${nome} gosta).`);
+    atencao.push(`${nome} recusou ${maisRecusado.nome} ${vezesTxt(maisRecusado.vezes)}. Tente oferecer de outro jeito (em pedacinhos, assado, junto com algo que ${nome} gosta).`);
   }
 
-  // ---------- clima e dica ----------
+  // ---------- clima ----------
   const pontos = positivos.length - atencao.length;
   const clima: ClimaRecado = atencao.length === 0 && positivos.length >= 2 ? 'otimo' : pontos >= 0 ? 'bom' : 'atencao';
   const rotuloClima = clima === 'otimo' ? 'Semana ótima!' : clima === 'bom' ? 'Semana boa' : 'Dá para melhorar';
 
-  let dica = 'Continue assim! Variar as cores no prato é um jeito fácil de comer de tudo um pouco.';
-  if (comArroz === 0 && comFeijao === 0) dica = 'Dica do Luca: um prato com arroz, feijão, uma proteína e um legume colorido já é um prato completo!';
-  else if (comFeijao === 0) dica = 'Dica do Luca: feijão pode entrar de vários jeitos: no caldinho, amassado com o arroz ou em tutu. Vale testar!';
-  else if (comArroz === 0) dica = 'Dica do Luca: arroz com feijão no almoço é um jeito simples de deixar o prato mais completo.';
-  else if (porGrupo.verduras === 0 || porGrupo.frutas === 0) dica = 'Dica do Luca: deixe a criança escolher a fruta ou o legume no mercado. Quem escolhe tem mais vontade de provar!';
-  else if (ultraTotal >= 3) dica = 'Dica do Luca: troque o nugget por frango em tirinhas assado. É crocante e muito mais nutritivo!';
-  else if (maisRecusado && maisRecusado.vezes >= 2) dica = 'Dica do Luca: muitas vezes é preciso oferecer um alimento várias vezes até a criança aceitar. Não desista!';
-
   const abertura = clima === 'otimo'
-    ? `Oi! Eu sou o Luca. Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias e a alimentação está ótima!`
+    ? `${oi} Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias e a alimentação está ótima!`
     : clima === 'bom'
-      ? `Oi! Eu sou o Luca. Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias. Tem bastante coisa boa e alguns pontos para cuidar.`
-      : `Oi! Eu sou o Luca. Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias. Separei alguns pontos para melhorar juntos.`;
+      ? `${oi} Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias. Tem bastante coisa boa e alguns pontos para cuidar.`
+      : `${oi} Olhei as ${refeicoesTxt(n)} de ${nome} dos últimos 7 dias. Separei alguns pontos para melhorar juntos.`;
 
-  return { clima, rotuloClima, abertura, positivos: positivos.slice(0, 4), atencao: atencao.slice(0, 5), dica, refeicoes: n, dias };
+  return { clima, rotuloClima, abertura, positivos: positivos.slice(0, 4), atencao: atencao.slice(0, 5), refeicoes: n, dias, pctComeuTudo: pctCompleta };
 }

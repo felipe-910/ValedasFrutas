@@ -5,9 +5,10 @@ import { NARRADORES } from './personagens.js';
 import { destravarVoz, vozDaHistoria, vozDaPergunta, useVozSincronizada, TextoRevelado } from './voz.jsx';
 import fundoCesta from './assets/fundo-cesta.jpg';
 import fundoPrato from './assets/fundo-prato.jpg';
+import fundoSemaforo from './assets/fundo-semaforo.jpg';
 
 // Cenário atrás do personagem enquanto ele conta a história (o semáforo não tem: fica o quadro branco de sempre)
-const CENARIOS = { cesta: fundoCesta, prato: fundoPrato };
+const CENARIOS = { cesta: fundoCesta, prato: fundoPrato, semaforo: fundoSemaforo };
 
 /* ---------- Ícones ---------- */
 function Seta() {

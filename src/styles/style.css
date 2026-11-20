@@ -2317,28 +2317,42 @@ body.historias-page {
 .pn-rosca-valor { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 18px; line-height: 1; }
 .pn-rosca-vezes { grid-column: 2 / 4; font-size: 11.5px; font-weight: 700; color: rgba(0,0,0,.45); margin-top: -2px; }
 
-/* Recado do Luca (painel > Refeições): como está a alimentação nos últimos 7 dias */
-.luca-recado { background: #fff; border-radius: 16px; padding: 14px 16px 16px; margin-bottom: 14px; box-shadow: 0 2px 0 rgba(0,0,0,.05); border: 2px solid #cfe6d6; }
-.luca-recado.clima-atencao { border-color: #f6d7a5; }
-.luca-recado-topo { display: flex; align-items: center; gap: 10px; }
-.luca-recado-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; background: #eaf5ec; border: 2px solid #fff; box-shadow: 0 0 0 2px #cfe6d6; }
-.luca-recado-titulos { flex: 1; min-width: 0; }
-.luca-recado-titulo { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 18px; color: #2f6b47; line-height: 1.1; }
-.luca-recado-periodo { display: block; font-size: 12px; font-weight: 700; color: rgba(0,0,0,.5); margin-top: 2px; }
-.luca-recado-clima { flex: none; font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: #e3f2e7; color: #2f6b47; white-space: nowrap; }
-.clima-atencao .luca-recado-clima { background: #fdf0d9; color: #9a6a10; }
-.luca-recado-fala { position: relative; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: #f1f8f3; font-size: 14px; font-weight: 700; color: #234; line-height: 1.4; }
-.luca-recado-fala::before { content: ''; position: absolute; top: -7px; left: 22px; border: 7px solid transparent; border-top: 0; border-bottom-color: #f1f8f3; }
-.luca-recado-bloco { margin-top: 12px; }
-.luca-recado-bloco-titulo { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
-.luca-recado-bloco.bom .luca-recado-bloco-titulo { color: #2f7d46; }
-.luca-recado-bloco.atencao .luca-recado-bloco-titulo { color: #b0700c; }
-.luca-recado-bloco ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.luca-recado-bloco li { position: relative; padding-left: 22px; font-size: 13.5px; font-weight: 700; color: #333; line-height: 1.4; }
-.luca-recado-bloco li::before { position: absolute; left: 0; top: 0; width: 16px; text-align: center; font-weight: 900; }
-.luca-recado-bloco.bom li::before { content: '\2713'; color: #2f7d46; }
-.luca-recado-bloco.atencao li::before { content: '!'; color: #fff; background: #f2b84b; border-radius: 50%; width: 16px; height: 16px; line-height: 16px; font-size: 11px; top: 2px; }
-.luca-recado-dica { margin-top: 12px; font-size: 13px; font-weight: 700; color: rgba(0,0,0,.6); line-height: 1.4; font-style: italic; }
+/* Recado do personagem da criança (painel > Refeições): Luca (azul) ou Alice (coral), últimos 7 dias */
+.recado { --cor: #4f5fc9; --cor-clara: #eef0fe; --capa-1: #6c7be0; --capa-2: #9aa6f2;
+  background: #fff; border-radius: 18px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.07); }
+.recado.tema-alice { --cor: #d4574d; --cor-clara: #fff1ee; --capa-1: #f08377; --capa-2: #f7b0a6; }
+.recado-capa { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px 16px 26px;
+  background: linear-gradient(135deg, var(--capa-1), var(--capa-2)); color: #fff; }
+.recado-avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; flex: none; background: #fff;
+  border: 3px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.18); }
+.recado-capa-textos { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.recado-kicker { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .6px; opacity: .92; }
+.recado-titulo { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; line-height: 1.1; color: #fff; margin: 1px 0; overflow-wrap: anywhere; }
+.recado-periodo { font-size: 12px; font-weight: 700; opacity: .9; }
+.recado-clima { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.95); color: var(--cor); white-space: nowrap; }
+.recado.clima-otimo .recado-clima { color: #2f7d46; }
+.recado.clima-atencao .recado-clima { color: #b0700c; }
+.recado-balao { position: relative; margin: -14px 14px 0; padding: 12px 14px; border-radius: 14px; background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.09); font-size: 14px; font-weight: 700; color: #2b2b2b; line-height: 1.45; }
+.recado-balao::before { content: ''; position: absolute; top: -8px; left: 40px; border: 8px solid transparent; border-top: 0; border-bottom-color: #fff; }
+.recado-numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 14px 0; }
+.recado-numeros > div { background: var(--cor-clara); border-radius: 12px; padding: 8px 4px; text-align: center; }
+.recado-numeros b { display: block; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; line-height: 1.1; color: var(--cor); }
+.recado-numeros span { display: block; font-size: 11px; font-weight: 800; color: rgba(0,0,0,.55); line-height: 1.2; }
+.recado-lista { margin: 16px 14px 0; }
+.recado-lista:last-child { margin-bottom: 16px; }
+.recado-lista h3 { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.recado-lista.bom h3 { color: #2f7d46; }
+.recado-lista.atencao h3 { color: #b0700c; }
+.recado-lista ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.recado-lista li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 700; color: #333; line-height: 1.4; }
+.recado-lista.bom li { background: #eef8f1; }
+.recado-lista.atencao li { background: #fff6e6; }
+.recado-icone { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; margin-top: 0; }
+.recado-lista.bom .recado-icone { background: #4f9a66; }
+.recado-lista.atencao .recado-icone { background: #eaa53a; }
+.recado.clima-sem_dados .recado-balao { margin-bottom: 16px; }
 
 /* Partidas (o antigo Desempenho) dentro do painel > Minijogos */
 .pn-historico { margin-top: 6px; }

@@ -41,6 +41,6 @@ button.hs-voltar svg{width:26px;height:26px}
 .hs-pergunta-botoes{display:flex;justify-content:center;gap:14px;margin-top:14px}
 .hs-pergunta-botoes .hs-proxima{min-width:110px;justify-content:center}
 .hs-nao{background:#e8857f;border-color:#cf6a64}
-/* história com cenário (cesta e prato): a imagem fica atrás do personagem, que não tem fundo */
+/* história com cenário (cesta, prato e semáforo): a imagem fica atrás do personagem, que não tem fundo */
 .hs-palco--cenario{background-color:#fff;background-size:cover;background-position:center bottom;background-repeat:no-repeat}
 .hs-boneco{background:transparent;user-select:none;-webkit-user-drag:none}

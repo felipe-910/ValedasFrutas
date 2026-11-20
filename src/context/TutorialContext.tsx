@@ -149,7 +149,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       alvo: '.pn-pagina [role="tabpanel"] > :first-child',
       opcional: true,
       titulo: 'Números e gráficos',
-      texto: 'Aqui aparece o resumo do painel escolhido. Em Refeições, o Luca deixa um recado sobre a alimentação dos últimos 7 dias; depois vêm quantas vezes ela comeu tudo, pela metade ou não comeu, em cada refeição, e quais alimentos mais aceita ou recusa. Role a tela para ver todos os gráficos.',
+      texto: 'Aqui aparece o resumo do painel escolhido. Em Refeições, o personagem da criança (Luca ou Alice) deixa um recado sobre a alimentação dos últimos 7 dias; depois vêm quantas vezes ela comeu tudo, pela metade ou não comeu, em cada refeição, e quais alimentos mais aceita ou recusa. Role a tela para ver todos os gráficos.',
     },
   ],
   'lista-refeicoes': [
