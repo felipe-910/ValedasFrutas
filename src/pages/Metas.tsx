@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import BarraTopo from '../components/BarraTopo';
 import Icone from '../components/Icone';
-import SugestoesMetas from '../components/SugestoesMetas';
+import SugestoesMetas, { useSugestoesMetas } from '../components/SugestoesMetas';
 import { useToast } from '../context/ToastContext';
 import { corEhClara } from '../lib/cores';
 import { guardarMetaEdicaoId, limparMetaEdicaoId } from '../lib/sessao';
@@ -22,7 +22,7 @@ import {
 } from '../services/metas';
 import type { FilhoAtivo, Meta } from '../types';
 
-type Aba = 'atuais' | 'concluidas';
+type Aba = 'atuais' | 'concluidas' | 'sugestoes';
 
 const plural = (n: number) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
 
@@ -189,6 +189,9 @@ export default function Metas() {
 
   useEffect(() => { void carregar(); }, [carregar]);
 
+  const sugestoes = useSugestoesMetas(filho, metas);
+  const qtdSugestoes = carregou && !sugestoes.carregando ? sugestoes.sugestoes.length : 0;
+
   useTutorialDaTela('metas', carregou); // na primeira vez, a Alice explica esta tela
   if (!filho) return <Navigate to="/home" replace />;
 
@@ -202,12 +205,21 @@ export default function Metas() {
         <div className="goal-tabs">
           <button className={`goal-tab${aba === 'atuais' ? ' active' : ''}`} type="button" onClick={() => setAba('atuais')}>Atuais</button>
           <button className={`goal-tab${aba === 'concluidas' ? ' active' : ''}`} type="button" onClick={() => setAba('concluidas')}>Concluídas</button>
+          <button
+            className={`goal-tab goal-tab-sugestoes${aba === 'sugestoes' ? ' active' : ''}`}
+            type="button"
+            aria-label={qtdSugestoes ? `Sugestões de metas (${qtdSugestoes})` : 'Sugestões de metas'}
+            onClick={() => setAba('sugestoes')}
+          >
+            Sugestões de metas
+            {qtdSugestoes > 0 && <span className="goal-tab-qtd">{qtdSugestoes}</span>}
+          </button>
         </div>
 
-        {aba === 'atuais' && carregou && <SugestoesMetas filho={filho} metas={metas} />}
+        {aba === 'sugestoes' && (carregou ? <SugestoesMetas filho={filho} estado={sugestoes} /> : <p className="empty-note">Carregando…</p>)}
 
         <div>
-          {filtradas.map((meta) => (
+          {aba !== 'sugestoes' && filtradas.map((meta) => (
             <CartaoMeta
               key={meta.id}
               meta={meta}
@@ -218,7 +230,7 @@ export default function Metas() {
             />
           ))}
         </div>
-        <p className="empty-note goals-empty" style={{ display: carregou && !filtradas.length ? 'block' : 'none' }}>Nenhuma meta por aqui ainda.</p>
+        <p className="empty-note goals-empty" style={{ display: carregou && aba !== 'sugestoes' && !filtradas.length ? 'block' : 'none' }}>Nenhuma meta por aqui ainda.</p>
 
         <button className="cta" type="button" onClick={() => { limparMetaEdicaoId(); navigate('/adicionar-meta'); }}>+ Nova meta</button>
       </div>

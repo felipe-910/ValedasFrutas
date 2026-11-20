@@ -1336,6 +1336,13 @@ body.home-page { background: var(--cream); }
   color: #222;
 }
 .goal-tab.active { background: var(--green); color: #fff; }
+.goal-tabs { gap: 6px; }
+.goal-tab { line-height: 1.15; padding-left: 4px; padding-right: 4px; }
+.goal-tab-sugestoes { flex: 1.4; position: relative; }
+.goal-tab-qtd { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 5px; border-radius: 999px; background: #f2726c; color: #fff; font-size: 11px; font-weight: 900; vertical-align: 1px; }
+@media (max-width: 380px) {
+  .goal-tab { font-size: 13px; }
+}
 
 .goal-card {
   margin-bottom: 18px;
@@ -1623,7 +1630,7 @@ body.home-page { background: var(--cream); }
 /* sugestões de metas (a partir das refeições registradas) */
 .goal-sugestoes { margin-bottom: 18px; }
 .goal-sugestoes-titulo { display: flex; align-items: center; gap: 6px; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 17px; color: #2f6b47; margin-bottom: 2px; }
-.goal-sugestoes-sub { font-size: 12.5px; font-weight: 700; color: rgba(0,0,0,.5); margin-bottom: 10px; }
+.goal-sugestoes-sub { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: rgba(0,0,0,.55); margin-bottom: 12px; }
 .goal-sugestao { background: #fff; border-radius: 14px; padding: 14px; margin-bottom: 10px; border-left: 5px solid var(--green); box-shadow: 0 2px 0 rgba(0,0,0,.05); }
 .goal-sugestao-grupo { display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 999px; color: #fff; margin-bottom: 6px; }
 .goal-sugestao-msg { font-size: 14px; font-weight: 700; color: #222; line-height: 1.4; }
