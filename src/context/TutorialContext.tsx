@@ -149,7 +149,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       alvo: '.pn-periodo',
       opcional: true,
       titulo: 'Período',
-      texto: 'Escolha se quer ver os últimos 7, 30 ou 90 dias. Os números e os gráficos mudam na hora.',
+      texto: 'Escolha se quer ver os últimos 7 ou 30 dias. Os números e os gráficos mudam na hora.',
     },
     {
       alvo: '.pn-pagina [role="tabpanel"] > :first-child',

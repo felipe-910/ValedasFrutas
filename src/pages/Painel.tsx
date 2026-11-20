@@ -41,8 +41,8 @@ export default function Painel() {
     };
 
     if (aba === 'refeicoes' && refeicoes === null) {
-      // busca de uma vez os últimos 90 dias: trocar o período depois não precisa buscar de novo
-      listarRefeicoesDesde(filhoId, inicioDoPeriodo(90))
+      // busca de uma vez os últimos 30 dias: trocar o período depois não precisa buscar de novo
+      listarRefeicoesDesde(filhoId, inicioDoPeriodo(30))
         .then((lista) => { if (ativo) setRefeicoes(lista); })
         .catch(falhou('refeicoes', 'Não foi possível carregar as refeições agora.'));
     }

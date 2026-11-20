@@ -2269,7 +2269,7 @@ body.historias-page {
 .pn-colunas:not(.poucas) .pn-coluna-valor { display: none; }
 .pn-colunas-eixo { display: flex; gap: 3px; margin-top: 4px; }
 .pn-colunas-eixo.poucas { gap: 10px; }
-.pn-colunas-eixo span { flex: 1; min-width: 0; text-align: center; font-size: 11px; font-weight: 700; color: rgba(0,0,0,.45); white-space: nowrap; overflow: visible; }
+.pn-colunas-eixo span { flex: 1; min-width: 0; text-align: center; font-size: 11px; font-weight: 700; color: rgba(0,0,0,.45); white-space: pre; line-height: 1.25; overflow: visible; }
 
 /* cada tipo de refeição */
 .pn-tipos { display: flex; flex-direction: column; gap: 10px; }

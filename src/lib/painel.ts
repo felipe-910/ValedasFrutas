@@ -5,9 +5,9 @@ import type { IdJogo, Meta, Partida, Refeicao, StatusRefeicao, TipoRefeicao } fr
 import { paraData } from './tempo';
 
 // ---------- Período ----------
-export type DiasPainel = 7 | 30 | 90;
+export type DiasPainel = 7 | 30;
 
-export const OPCOES_DIAS: DiasPainel[] = [7, 30, 90];
+export const OPCOES_DIAS: DiasPainel[] = [7, 30];
 
 function inicioDoDia(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -32,7 +32,8 @@ function dentroDoPeriodo<T extends { criadoEm?: Refeicao['criadoEm'] }>(lista: T
   return lista.filter((item) => dataDe(item).getTime() >= ini);
 }
 
-// Os "baldes" do gráfico de barras: um por dia (7 e 30 dias) ou um por semana (90 dias)
+// Os "baldes" do gráfico de barras: um por dia (7 dias) ou 5 blocos de 6 dias (30 dias),
+// para que toda barra tenha a sua data embaixo
 export interface Balde {
   inicio: Date;
   fim: Date; // exclusivo
@@ -41,27 +42,31 @@ export interface Balde {
 }
 
 const DIAS_SEMANA = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+const DIAS_POR_BLOCO = 6;
 
 export function baldesDoPeriodo(dias: DiasPainel, agora: Date = new Date()): Balde[] {
   const ini = inicioDoPeriodo(dias, agora);
   const fmt = (d: Date) => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
   const baldes: Balde[] = [];
-  if (dias <= 30) {
+  if (dias === 7) {
     for (let i = 0; i < dias; i++) {
       const d = somarDias(ini, i);
-      // com 30 barras não cabe um rótulo em cada: mostra só alguns dias
-      const rotulo = dias === 7 ? DIAS_SEMANA[d.getDay()] : (i % 5 === 0 || i === dias - 1 ? String(d.getDate()) : '');
-      baldes.push({ inicio: d, fim: somarDias(d, 1), rotulo, rotuloLongo: fmt(d) });
+      baldes.push({ inicio: d, fim: somarDias(d, 1), rotulo: DIAS_SEMANA[d.getDay()], rotuloLongo: fmt(d) });
     }
     return baldes;
   }
-  // 90 dias: semanas de 7 dias, terminando hoje
-  const fimTotal = somarDias(inicioDoDia(agora), 1);
-  for (let fim = fimTotal; fim > ini; fim = somarDias(fim, -7)) {
-    const inicio = new Date(Math.max(somarDias(fim, -7).getTime(), ini.getTime()));
-    baldes.unshift({ inicio, fim, rotulo: '', rotuloLongo: `${fmt(inicio)} a ${fmt(somarDias(fim, -1))}` });
+  // 30 dias: 5 blocos iguais de 6 dias (nenhuma barra fica "pela metade"), cada um com as datas
+  for (let i = 0; i < dias; i += DIAS_POR_BLOCO) {
+    const inicio = somarDias(ini, i);
+    const ultimo = somarDias(inicio, DIAS_POR_BLOCO - 1);
+    baldes.push({
+      inicio,
+      fim: somarDias(inicio, DIAS_POR_BLOCO),
+      rotulo: `${fmt(inicio)}
+a ${fmt(ultimo)}`,
+      rotuloLongo: `${fmt(inicio)} a ${fmt(ultimo)}`
+    });
   }
-  baldes.forEach((b, i) => { if (i % 3 === 0 || i === baldes.length - 1) b.rotulo = fmt(b.inicio); });
   return baldes;
 }
 

@@ -84,7 +84,7 @@ interface Coluna {
   texto: string; // descrição para leitor de tela
 }
 
-// Gráfico de colunas (uma por dia ou por semana). Cada coluna pode ter partes empilhadas.
+// Gráfico de colunas (uma por dia ou por bloco de dias). Cada coluna pode ter partes empilhadas.
 function Colunas({ colunas, descricao }: { colunas: Coluna[]; descricao: string }) {
   const max = Math.max(1, ...colunas.map((c) => c.total));
   const poucas = colunas.length <= 7;
@@ -169,7 +169,7 @@ export function PainelRefeicoes({ resumo, nome }: { resumo: ResumoRefeicoes; nom
   if (r.total === 0) {
     return <Vazio>Nenhuma refeição registrada nesse período. Registre as refeições em "Registrar refeições" para ver os gráficos aqui.</Vazio>;
   }
-  const semana = r.diasNoPeriodo > 30;
+  const porDia = r.diasNoPeriodo === 7;
   const destaques = destaquesRefeicoes(r, nome);
   const temSemInfo = r.porBalde.some((b) => b.total > b.status.completa + b.status.metade + b.status.nao_comeu);
   const colunas: Coluna[] = r.porBalde.map((b) => {
@@ -207,8 +207,8 @@ export function PainelRefeicoes({ resumo, nome }: { resumo: ResumoRefeicoes; nom
         </Cartao>
       )}
 
-      <Cartao titulo={semana ? 'Refeições por semana' : 'Refeições por dia'}>
-        <Colunas colunas={colunas} descricao={semana ? 'Refeições registradas por semana' : 'Refeições registradas por dia'} />
+      <Cartao titulo={porDia ? 'Refeições por dia' : 'Refeições nos últimos 30 dias'}>
+        <Colunas colunas={colunas} descricao={porDia ? 'Refeições registradas por dia' : 'Refeições registradas a cada 6 dias'} />
         <Legenda semInfo={temSemInfo} />
       </Cartao>
 
@@ -243,7 +243,7 @@ export function PainelJogos({ resumo }: { resumo: ResumoJogos }) {
   if (r.total === 0) {
     return <Vazio>Nenhum minijogo jogado nesse período. Quando a criança jogar, o desempenho aparece aqui.</Vazio>;
   }
-  const semana = r.diasNoPeriodo > 30;
+  const porDia = r.diasNoPeriodo === 7;
   const colunas: Coluna[] = r.porBalde.map((b) => ({
     balde: b.balde,
     total: b.partidas,
@@ -285,8 +285,8 @@ export function PainelJogos({ resumo }: { resumo: ResumoJogos }) {
         </div>
       </Cartao>
 
-      <Cartao titulo={semana ? 'Partidas por semana' : 'Partidas por dia'}>
-        <Colunas colunas={colunas} descricao={semana ? 'Partidas jogadas por semana' : 'Partidas jogadas por dia'} />
+      <Cartao titulo={porDia ? 'Partidas por dia' : 'Partidas nos últimos 30 dias'}>
+        <Colunas colunas={colunas} descricao={porDia ? 'Partidas jogadas por dia' : 'Partidas jogadas a cada 6 dias'} />
       </Cartao>
 
       <Cartao titulo="Onde precisa de ajuda" sub="Alimentos que mais errou no Semáforo e na Cesta">
