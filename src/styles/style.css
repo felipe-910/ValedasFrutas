@@ -2444,3 +2444,46 @@ body.historias-page {
   .pn-tipo { grid-template-columns: 96px minmax(0, 1fr) 22px; }
   .pn-numero-valor { font-size: 21px; }
 }
+
+/* ---------- HOME no estilo da tela de histórias ----------
+   O topo usa as mesmas peças (.hist-topo, nuvens, sol, colinas, arbustos, botão redondo do menu);
+   aqui só entram os ajustes: sininho à direita, nuvem e sol fora do caminho dele, título colorido
+   e o corpo creme com a borda de cima arredondada e o "Seus pequenos" colorido. */
+.letras-coloridas { position: relative; display: inline-block; white-space: nowrap; }
+.home-topo .hist-nuvem--b { right: auto; left: 58%; top: 4%; }
+.home-topo .hist-sol { top: 40%; }
+.home-sino-btn { left: auto; right: clamp(12px, 3.4cqw, 30px); }
+.home-sino-btn svg { display: block; }
+.home-sino-btn .bell-badge { top: 0; right: 0; width: auto; height: 18px; min-width: 18px; border-radius: 9px; background: #f2726c; border-color: #fff; }
+.home-textos { top: calc(env(safe-area-inset-top, 0px) + clamp(14px, 3.4cqw, 28px)); width: auto; max-width: 66%; }
+.home-ola {
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 9.5vw, 56px);
+  line-height: 1.15;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+/* mesma cor e contorno do "Olá, nome!" de antes (.header-text .sticker-line.on-green) */
+.home-ola .home-ola-texto { font-size: inherit; line-height: 1.25; color: #2f6b47; text-shadow: 0 0 8px rgba(255,255,255,.85); }
+.home-corpo {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * clamp(30px, 6vw, 64px));
+  background: var(--cream);
+  border-radius: 50% 50% 0 0 / clamp(34px, 7vw, 70px) clamp(34px, 7vw, 70px) 0 0;
+}
+.home-pill {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  transform: translateY(clamp(-20px, -3vw, -12px));
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(30px, 9vw, 50px);
+  line-height: 1.15;
+  letter-spacing: .01em;
+  filter: drop-shadow(0 .09em .07em rgb(70 90 70 / 40%));
+}
+.home-corpo > .home-card { padding-top: 8px; }

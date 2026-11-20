@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Arbusto, Colinas, Nuvem, Sol } from '../components/CenarioHistorias';
 import Icone from '../components/Icone';
+import LetrasColoridas from '../components/LetrasColoridas';
 import { useAuth } from '../context/AuthContext';
 import { useSenha } from '../context/SenhaContext';
 import { useToast } from '../context/ToastContext';
@@ -22,7 +24,7 @@ function paraFilhoAtivo(filho: Filho, cor: string): FilhoAtivo {
 }
 
 export default function Home() {
-  usePagina('Vale das Frutas', 'home-page', '#6fa981');
+  usePagina('Vale das Frutas', 'home-page', '#8fe3e0');
   const { user } = useAuth();
   const navigate = useNavigate();
   const mostrarToast = useToast();
@@ -36,6 +38,33 @@ export default function Home() {
   const [menuAberto, setMenuAberto] = useState(false);
 
   const nomeResponsavel = user?.displayName || 'Responsável';
+  // no topo vai só o primeiro nome, como na tela de histórias ("Olá, Felipe!")
+  const primeiroNome = nomeResponsavel.trim().split(/\s+/)[0] || 'Responsável';
+
+  // Nomes grandes diminuem a letra para o "Olá, nome!" nunca passar do espaço entre o menu e o sininho
+  const topo = useRef<HTMLElement>(null);
+  const titulo = useRef<HTMLHeadingElement>(null);
+  const tituloTexto = useRef<HTMLSpanElement>(null);
+  const ajustarTitulo = useCallback(() => {
+    const t = topo.current;
+    const h = titulo.current;
+    const texto = tituloTexto.current;
+    if (!t || !h || !texto) return;
+    const largura = t.clientWidth;
+    let tamanho = Math.min(56, Math.max(28, largura * 0.095));
+    const disponivel = Math.min(largura - 2 * Math.max(70, largura * 0.17), 620);
+    h.style.fontSize = `${tamanho}px`;
+    while (texto.offsetWidth > disponivel && tamanho > 16) {
+      tamanho -= 1;
+      h.style.fontSize = `${tamanho}px`;
+    }
+  }, []);
+  useLayoutEffect(() => {
+    ajustarTitulo();
+    window.addEventListener('resize', ajustarTitulo);
+    if (document.fonts && document.fonts.ready) void document.fonts.ready.then(ajustarTitulo);
+    return () => window.removeEventListener('resize', ajustarTitulo);
+  }, [ajustarTitulo, primeiroNome]);
   const fotoSalva = user ? lerPerfilLocal(user.uid, 'foto') : null;
   const fotoConta = fotoSalva || user?.photoURL || null;
 
@@ -119,20 +148,28 @@ export default function Home() {
 
   return (
     <>
-      <header className="app-header">
-        <button className="icon-btn" aria-label="Menu" type="button" data-tutorial="menu" onClick={() => setMenuAberto(true)}>
-          <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
-            <rect width="26" height="3" rx="1.5" fill="#fff" />
-            <rect y="8.5" width="26" height="3" rx="1.5" fill="#fff" />
-            <rect y="17" width="26" height="3" rx="1.5" fill="#fff" />
-          </svg>
-        </button>
-        <div className="header-text">
-          <h1 className="sticker-heading"><span className="sticker-line on-green">Olá, <span>{nomeResponsavel}</span>!</span></h1>
-          <p className="subgreeting">Que bom ter você aqui!</p>
+      {/* topo no mesmo estilo da tela de histórias: céu, sol, nuvens, colinas com cachoeira e arbustos */}
+      <header className="hist-topo home-topo" ref={topo}>
+        <div className="hist-deco hist-nuvem hist-nuvem--a"><Nuvem /></div>
+        <div className="hist-deco hist-nuvem hist-nuvem--b"><Nuvem /></div>
+        <div className="hist-deco hist-sol"><Sol /></div>
+        <div className="hist-deco hist-colinas"><Colinas /></div>
+        <div className="hist-deco hist-arbusto hist-arbusto--e"><Arbusto /></div>
+        <div className="hist-deco hist-arbusto hist-arbusto--d"><Arbusto /></div>
+
+        <div className="hist-textos home-textos">
+          {/* "Olá, nome!" com a mesma fonte e cor de antes (verde-escuro com contorno branco) */}
+          <h1 className="home-ola" ref={titulo}>
+            <span className="sticker-line on-green home-ola-texto" ref={tituloTexto}>Olá, <span>{primeiroNome}</span>!</span>
+          </h1>
+          <p className="hist-sub">Que bom ter você aqui!</p>
         </div>
-        <button className="icon-btn" aria-label="Notificações" type="button" data-tutorial="sininho" onClick={() => navigate('/notificacoes')}>
-          <svg width="22" height="24" viewBox="0 0 22 24" fill="none">
+
+        <button className="hist-menu-btn" aria-label="Menu" type="button" data-tutorial="menu" onClick={() => setMenuAberto(true)}>
+          <span /><span /><span />
+        </button>
+        <button className="hist-menu-btn home-sino-btn" aria-label="Notificações" type="button" data-tutorial="sininho" onClick={() => navigate('/notificacoes')}>
+          <svg width="22" height="24" viewBox="0 0 22 24" fill="none" aria-hidden="true">
             <path d="M11 24c1.66 0 3-1.34 3-3H8c0 1.66 1.34 3 3 3zm8-7V10c0-4.07-2.13-7.44-6-8.33V1a2 2 0 10-4 0v.67C5.13 2.56 3 5.92 3 10v7l-2 2v1h20v-1l-2-2z" fill="#fff" />
           </svg>
           {naoLidas > 0 && <span className="bell-badge">{naoLidas > 9 ? '9+' : naoLidas}</span>}
@@ -190,8 +227,9 @@ export default function Home() {
         </div>
       )}
 
-      <main className="home-card">
-        <div className="hang-tag"><span>Seus pequenos</span></div>
+      <main className="home-corpo">
+        <h2 className="home-pill" aria-label="Seus pequenos"><LetrasColoridas texto="Seus pequenos" /></h2>
+        <div className="home-card">
 
         <div className="kids-list">
           {filhos.map((filho, i) => {
@@ -225,6 +263,7 @@ export default function Home() {
           </span>
           Adicionar criança
         </button>
+        </div>
       </main>
     </>
   );
