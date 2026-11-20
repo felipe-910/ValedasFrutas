@@ -22,3 +22,12 @@ export function useCatalogoAlimentos(): AlimentoCatalogo[] {
 
   return catalogo;
 }
+
+export const ICONE_ALIMENTO_PADRAO = 'game-icons:meal';
+
+// Ícone a mostrar para um alimento: o do catálogo (pelo nome) tem prioridade, assim refeições
+// salvas antes da troca de ícones também aparecem com os ícones novos.
+export function iconeDoAlimento(catalogo: AlimentoCatalogo[], nome: string, iconeSalvo?: string): string {
+  const achado = catalogo.find((f) => f.nome.toLowerCase() === nome.trim().toLowerCase());
+  return achado?.icone || iconeSalvo || ICONE_ALIMENTO_PADRAO;
+}

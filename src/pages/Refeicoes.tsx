@@ -5,7 +5,7 @@ import BotoesTipoRefeicao from '../components/BotoesTipoRefeicao';
 import BuscaAlimento from '../components/BuscaAlimento';
 import Icone from '../components/Icone';
 import { useToast } from '../context/ToastContext';
-import { useCatalogoAlimentos } from '../lib/useCatalogoAlimentos';
+import { ICONE_ALIMENTO_PADRAO, iconeDoAlimento, useCatalogoAlimentos } from '../lib/useCatalogoAlimentos';
 import { lerRefeicaoEmEdicao, limparRefeicaoEmEdicao } from '../lib/sessao';
 import { useFilhoAtivo } from '../lib/useFilhoAtivo';
 import { usePagina } from '../lib/usePagina';
@@ -56,7 +56,7 @@ export default function Refeicoes() {
     const nome = busca.trim();
     if (!nome) return;
     const achado = catalogo.find((f) => f.nome.toLowerCase() === nome.toLowerCase());
-    adicionarAlimento(achado ? { nome: achado.nome, icone: achado.icone } : { nome, icone: 'mdi:food-variant' });
+    adicionarAlimento(achado ? { nome: achado.nome, icone: achado.icone } : { nome, icone: ICONE_ALIMENTO_PADRAO });
   }
 
   function editarAlimento(indice: number) {
@@ -134,7 +134,7 @@ export default function Refeicoes() {
         <div className="food-list">
           {alimentos.map((item, idx) => (
             <div className="food-item" key={`${item.nome}-${idx}`}>
-              <span className="food-icon"><Icone nome={item.icone || 'mdi:food-variant'} cor="6fa981" tamanho={18} /></span>
+              <span className="food-icon"><Icone nome={iconeDoAlimento(catalogo, item.nome, item.icone)} cor="6fa981" tamanho={18} /></span>
               <span className="food-name">{item.nome}</span>
               <button className="icon-action edit" type="button" aria-label="Editar" onClick={() => editarAlimento(idx)}>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /></svg>
