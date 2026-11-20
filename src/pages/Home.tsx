@@ -3,7 +3,6 @@ import type { CSSProperties } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Arbusto, Colinas, Nuvem, Sol } from '../components/CenarioHistorias';
 import Icone from '../components/Icone';
-import LetrasColoridas from '../components/LetrasColoridas';
 import { useAuth } from '../context/AuthContext';
 import { useSenha } from '../context/SenhaContext';
 import { useToast } from '../context/ToastContext';
@@ -158,7 +157,7 @@ export default function Home() {
         <div className="hist-deco hist-arbusto hist-arbusto--d"><Arbusto /></div>
 
         <div className="hist-textos home-textos">
-          {/* "Olá, nome!" com a mesma fonte e cor de antes (verde-escuro com contorno branco) */}
+          {/* "Olá, nome!" com a mesma fonte e o mesmo verde dos títulos das outras telas (Metas, Notificações) */}
           <h1 className="home-ola" ref={titulo}>
             <span className="sticker-line on-green home-ola-texto" ref={tituloTexto}>Olá, <span>{primeiroNome}</span>!</span>
           </h1>
@@ -228,7 +227,7 @@ export default function Home() {
       )}
 
       <main className="home-corpo">
-        <h2 className="home-pill" aria-label="Seus pequenos"><LetrasColoridas texto="Seus pequenos" /></h2>
+        <h2 className="home-pill"><span className="sticker-line on-green">Seus pequenos</span></h2>
         <div className="home-card">
 
         <div className="kids-list">
