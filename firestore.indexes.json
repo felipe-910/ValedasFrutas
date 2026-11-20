@@ -1,0 +1,24 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "refeicoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "filhoId", "order": "ASCENDING" },
+        { "fieldPath": "responsavelId", "order": "ASCENDING" },
+        { "fieldPath": "criadoEm", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "refeicoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "filhoId", "order": "ASCENDING" },
+        { "fieldPath": "responsavelId", "order": "ASCENDING" },
+        { "fieldPath": "tipo", "order": "ASCENDING" },
+        { "fieldPath": "criadoEm", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

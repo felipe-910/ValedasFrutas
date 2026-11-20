@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Pequenos (filhos) cadastrados por cada responsável ----------
+    match /filhos/{filhoId} {
+      allow read, update, delete: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.responsavelId;
+    }
+
+    // ---------- Metas de cada pequeno ----------
+    match /metas/{metaId} {
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.responsavelId;
+      allow update: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId
+        && request.resource.data.responsavelId == resource.data.responsavelId;
+      allow delete: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+    }
+
+    // ---------- Refeições registradas de cada pequeno ----------
+    match /refeicoes/{refeicaoId} {
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.responsavelId;
+      allow update: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId
+        && request.resource.data.responsavelId == resource.data.responsavelId;
+      allow delete: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+    }
+
+    // ---------- Partidas dos minigames (desempenho de cada pequeno) ----------
+    match /partidas/{partidaId} {
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.responsavelId;
+      // o histórico não é editado nem apagado pelo app
+      allow update, delete: if false;
+    }
+
+    // ---------- Notificações (ex: registro de login com data/horário) ----------
+    match /notificacoes/{notifId} {
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.responsavelId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.responsavelId;
+      // O app não edita nem apaga notificações hoje
+      allow update, delete: if false;
+    }
+
+    // ---------- Dados de cada responsável (ex.: quais tutoriais da Alice ele já viu) ----------
+    match /responsaveis/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Qualquer outra coleção fica bloqueada por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

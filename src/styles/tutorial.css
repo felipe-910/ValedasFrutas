@@ -1,0 +1,215 @@
+/* ---------- Tutorial da área dos pais (a Alice explica parte por parte) ---------- */
+.tt-raiz {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  font-family: 'Nunito', sans-serif;
+  color: #333;
+}
+
+/* a tela escurece e só a parte explicada fica acesa */
+.tt-destaque {
+  position: fixed;
+  border-radius: 18px;
+  box-shadow: 0 0 0 200vmax rgba(28, 52, 38, 0.64);
+  transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease;
+  pointer-events: none;
+}
+.tt-destaque--aceso::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 21px;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 4px rgba(111, 169, 129, 0.9);
+  animation: tt-pulso 1.6s ease-in-out infinite;
+}
+@keyframes tt-pulso {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.025); }
+}
+
+/* balão: a Alice "atrás" da caixa de fala, aparecendo do peito para cima */
+.tt-balao {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+}
+.tt-balao--baixo { bottom: 14px; }
+.tt-balao--cima { top: 10px; }
+.tt-balao--meio { top: 50%; transform: translate(-50%, -50%); }
+
+.tt-alice {
+  position: relative;
+  height: 86px;
+  z-index: 0;
+  pointer-events: none;
+}
+.tt-alice img {
+  position: absolute;
+  left: 12px;
+  bottom: -64px;
+  width: 118px;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+  animation: tt-sobe 0.35s ease-out;
+}
+@keyframes tt-sobe {
+  from { transform: translateY(18px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.tt-caixa {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border: 3px solid #6fa981;
+  border-radius: 22px;
+  padding: 12px 16px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: tt-entra 0.3s ease-out;
+}
+@keyframes tt-entra {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.tt-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.tt-nome {
+  background: #fc9a98;
+  border: 2px solid #f06c6c;
+  color: #fff;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1;
+  padding: 5px 14px 3px;
+  border-radius: 10px;
+}
+.tt-pular {
+  background: none;
+  border: none;
+  color: #7c7c7c;
+  font: 700 14px 'Nunito', sans-serif;
+  text-decoration: underline;
+  padding: 6px 2px;
+  cursor: pointer;
+}
+
+.tt-titulo {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1.15;
+  color: #4f9366;
+  margin: 8px 0 2px;
+}
+.tt-texto {
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #3a3a3a;
+}
+.tt-resto { visibility: hidden; } /* o que a Alice ainda não falou ocupa o espaço: a caixa não muda de tamanho */
+.tt-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.tt-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+/* quanto já foi: barrinha + "3 de 14" */
+.tt-progresso {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tt-barra {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: #dcebe0;
+  overflow: hidden;
+}
+.tt-barra i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: #6fa981;
+  transition: width 0.35s ease;
+}
+.tt-progresso small {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #7c7c7c;
+}
+
+.tt-botoes {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+.tt-proximo,
+.tt-voltar {
+  font-family: 'Nunito', sans-serif;
+  border-radius: 14px;
+  cursor: pointer;
+}
+.tt-proximo {
+  background: #6fa981;
+  color: #fff;
+  border: none;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 10px 18px;
+  box-shadow: 0 3px 0 #588a68;
+}
+.tt-proximo:active { transform: translateY(2px); box-shadow: 0 1px 0 #588a68; }
+.tt-voltar {
+  background: #fff;
+  color: #588a68;
+  border: 2px solid #bfe0cb;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 14px;
+}
+.tt-proximo:focus-visible,
+.tt-voltar:focus-visible,
+.tt-pular:focus-visible {
+  outline: 3px solid #f06c6c;
+  outline-offset: 2px;
+}
+
+@media (max-width: 360px) {
+  .tt-titulo { font-size: 20px; }
+  .tt-texto { font-size: 15px; }
+  .tt-proximo { font-size: 15px; padding: 9px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-destaque { transition: none; }
+  .tt-destaque--aceso::after,
+  .tt-alice img,
+  .tt-caixa { animation: none; }
+}
