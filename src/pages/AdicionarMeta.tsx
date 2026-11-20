@@ -7,7 +7,7 @@ import BuscaAlimento from '../components/BuscaAlimento';
 import GradeCores from '../components/GradeCores';
 import { useToast } from '../context/ToastContext';
 import { CORES_META } from '../lib/cores';
-import { lerMetaEdicaoId, limparMetaEdicaoId } from '../lib/sessao';
+import { lerMetaEdicaoId, lerMetaSugerida, limparMetaEdicaoId, limparMetaSugerida } from '../lib/sessao';
 import { useFilhoAtivo } from '../lib/useFilhoAtivo';
 import { usePagina } from '../lib/usePagina';
 import { useTutorialDaTela } from '../context/TutorialContext';
@@ -44,14 +44,17 @@ export default function AdicionarMeta() {
   const [metaEdicaoId] = useState(() => lerMetaEdicaoId());
   const [metaEmEdicao, setMetaEmEdicao] = useState<Meta | null>(null);
 
+  // Meta sugerida pelo app (vem da tela de metas): o formulário já começa preenchido com uma meta de alimento
+  const [sugerida] = useState(() => (metaEdicaoId ? null : lerMetaSugerida()));
+
   const [passo, setPasso] = useState<1 | 2>(1);
-  const [tipo, setTipo] = useState<TipoMeta>('simples');
-  const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
+  const [tipo, setTipo] = useState<TipoMeta>(sugerida ? 'alimento' : 'simples');
+  const [titulo, setTitulo] = useState(sugerida?.titulo ?? '');
+  const [descricao, setDescricao] = useState(sugerida?.descricao ?? '');
   const [refeicoes, setRefeicoes] = useState<TipoRefeicao[]>([]);
-  const [alimento, setAlimento] = useState('');
-  const [dias, setDias] = useState('');
-  const [cor, setCor] = useState('#f2726c');
+  const [alimento, setAlimento] = useState(sugerida?.alimento ?? '');
+  const [dias, setDias] = useState(sugerida ? String(sugerida.dias) : '');
+  const [cor, setCor] = useState(sugerida?.cor ?? '#f2726c');
   const [recompensa, setRecompensa] = useState('');
   const [salvando, setSalvando] = useState(false);
 
@@ -85,6 +88,9 @@ export default function AdicionarMeta() {
     })();
     return () => { ativo = false; };
   }, [metaEdicaoId, navigate, mostrarToast]);
+
+  // a sugestão só preenche o formulário uma vez
+  useEffect(() => { if (sugerida) limparMetaSugerida(); }, [sugerida]);
 
   useTutorialDaTela('adicionar-meta'); // na primeira vez, a Alice explica esta tela
   if (!filho) return <Navigate to="/home" replace />;

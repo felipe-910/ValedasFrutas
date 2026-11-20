@@ -57,6 +57,24 @@ export function limparMetaEdicaoId(): void {
   sessionStorage.removeItem('metaEdicaoId');
 }
 
+// Meta sugerida pelo app (tela de metas -> formulário da meta de alimento já preenchido)
+export interface MetaSugerida {
+  alimento: string;
+  titulo: string;
+  descricao: string;
+  dias: number;
+  cor: string;
+}
+export function lerMetaSugerida(): MetaSugerida | null {
+  return lerJSON<MetaSugerida>(sessionStorage, 'metaSugerida');
+}
+export function guardarMetaSugerida(dados: MetaSugerida): void {
+  sessionStorage.setItem('metaSugerida', JSON.stringify(dados));
+}
+export function limparMetaSugerida(): void {
+  sessionStorage.removeItem('metaSugerida');
+}
+
 // ---------- Perfil do responsável (a foto fica só neste aparelho) ----------
 export function lerPerfilLocal(uid: string, campo: 'foto'): string | null {
   return localStorage.getItem(`perfil_${campo}_${uid}`);

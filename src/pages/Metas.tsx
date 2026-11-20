@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import BarraTopo from '../components/BarraTopo';
 import Icone from '../components/Icone';
+import SugestoesMetas from '../components/SugestoesMetas';
 import { useToast } from '../context/ToastContext';
 import { corEhClara } from '../lib/cores';
 import { guardarMetaEdicaoId, limparMetaEdicaoId } from '../lib/sessao';
@@ -202,6 +203,8 @@ export default function Metas() {
           <button className={`goal-tab${aba === 'atuais' ? ' active' : ''}`} type="button" onClick={() => setAba('atuais')}>Atuais</button>
           <button className={`goal-tab${aba === 'concluidas' ? ' active' : ''}`} type="button" onClick={() => setAba('concluidas')}>Concluídas</button>
         </div>
+
+        {aba === 'atuais' && carregou && <SugestoesMetas filho={filho} metas={metas} />}
 
         <div>
           {filtradas.map((meta) => (

@@ -209,6 +209,12 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       texto: 'Em "Atuais" ficam as metas em andamento e em "Concluídas", as que ela já cumpriu.',
     },
     {
+      alvo: '.goal-sugestoes',
+      opcional: true,
+      titulo: 'Metas sugeridas',
+      texto: 'O app olha as últimas refeições registradas e sugere metas de alimento: por exemplo, quando faltou fruta, verdura ou proteína. Toque em "Criar esta meta" para abrir o formulário já preenchido, ou em "Agora não" para esconder por uma semana.',
+    },
+    {
       alvo: '.goal-card',
       opcional: true,
       titulo: 'Cada meta',
