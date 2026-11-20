@@ -26,6 +26,7 @@ export interface AlimentoCatalogo {
   nome: string;
   categoria: string;
   icone: string;
+  imagem?: string; // sprite do alimento (dos minijogos), quando existe
 }
 
 // ---------- Pequenos (filhos) ----------

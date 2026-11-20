@@ -6,7 +6,7 @@ import BarraTopo from './BarraTopo';
 import Icone from './Icone';
 import PerfilMini from './PerfilMini';
 import { corEhClara } from '../lib/cores';
-import { iconeDoAlimento, useCatalogoAlimentos } from '../lib/useCatalogoAlimentos';
+import IconeAlimento from './IconeAlimento';
 import { OPCOES_DIAS, formatarNumero, progressoDaMeta } from '../lib/painel';
 import type { Balde, ContagemStatus, DiasPainel, ResumoJogos, ResumoMetas, ResumoRefeicoes } from '../lib/painel';
 import { refeicoesDaMeta, xpTotalDaMeta } from '../services/progressoMeta';
@@ -146,7 +146,6 @@ function destaquesRefeicoes(r: ResumoRefeicoes, nome: string): string[] {
 }
 
 function ListaAlimentos({ titulo, itens, cor, vazio }: { titulo: string; itens: ResumoRefeicoes['aceitos']; cor: string; vazio: string }) {
-  const catalogo = useCatalogoAlimentos();
   return (
     <div className="pn-alimentos-col">
       <h3 className="pn-alimentos-titulo"><i style={{ background: cor }} />{titulo}</h3>
@@ -154,7 +153,7 @@ function ListaAlimentos({ titulo, itens, cor, vazio }: { titulo: string; itens: 
         <ul className="pn-alimentos">
           {itens.map((a) => (
             <li key={a.nome}>
-              <Icone nome={iconeDoAlimento(catalogo, a.nome, a.icone)} cor="588a68" tamanho={18} />
+              <IconeAlimento nome={a.nome} icone={a.icone} cor="588a68" tamanho={18} />
               <span className="pn-alimento-nome">{a.nome}</span>
               <span className="pn-alimento-vezes">{vezes(a.vezes)}</span>
             </li>

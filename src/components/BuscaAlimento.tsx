@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import Icone from './Icone';
+import IconeAlimento from './IconeAlimento';
 import { useCatalogoAlimentos } from '../lib/useCatalogoAlimentos';
 import type { AlimentoCatalogo } from '../types';
 
@@ -65,7 +65,7 @@ export default function BuscaAlimento({ id, valor, aoMudar, aoEscolher, aoAperta
                 aoEscolher(f);
               }}
             >
-              <Icone nome={f.icone} cor="6fa981" tamanho={18} />
+              <IconeAlimento nome={f.nome} icone={f.icone} cor="6fa981" tamanho={18} />
               <span>{f.nome}</span>
             </button>
           ))}
