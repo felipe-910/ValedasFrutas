@@ -186,8 +186,8 @@ export default function Perfil() {
               <Link className="profile-info-row" to="/termos" style={{ textDecoration: 'none', cursor: 'pointer' }}>
                 <span className="row-icon"><Icone nome="mdi:file-document-outline" cor="6fa981" /></span>
                 <span className="row-text">
-                  <span className="row-label">Termos de uso</span>
-                  <span className="row-value">Ler termos de uso</span>
+                  <span className="row-label">Política de Privacidade</span>
+                  <span className="row-value">Ler a política de privacidade</span>
                 </span>
                 <span className="row-chevron">&#8250;</span>
               </Link>

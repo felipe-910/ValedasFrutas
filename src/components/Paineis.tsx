@@ -7,10 +7,11 @@ import Icone from './Icone';
 import PerfilMini from './PerfilMini';
 import { corEhClara } from '../lib/cores';
 import IconeAlimento from './IconeAlimento';
+import HistoricoPartidas from './HistoricoPartidas';
 import { OPCOES_DIAS, formatarNumero, progressoDaMeta } from '../lib/painel';
 import type { Balde, ContagemStatus, DiasPainel, ResumoJogos, ResumoMetas, ResumoRefeicoes } from '../lib/painel';
 import { refeicoesDaMeta, xpTotalDaMeta } from '../services/progressoMeta';
-import type { FilhoAtivo, Meta, StatusRefeicao } from '../types';
+import type { FilhoAtivo, Meta, Partida, StatusRefeicao } from '../types';
 
 export type AbaPainel = 'refeicoes' | 'jogos' | 'metas';
 
@@ -73,6 +74,54 @@ function BarraStatus({ status }: { status: ContagemStatus }) {
       {total === 0
         ? <span className="pn-barra-vazia" />
         : STATUS.map((s) => (status[s.id] ? <span key={s.id} style={{ width: `${(status[s.id] / total) * 100}%`, background: s.cor }} /> : null))}
+    </div>
+  );
+}
+
+// Gráfico de rosca: comeu tudo / metade / não comeu, com a % de "comeu tudo" no meio
+const COR_TEXTO_STATUS: Record<StatusRefeicao, string> = { completa: '#4f9366', metade: '#b07a12', nao_comeu: '#c2493e' };
+
+function RoscaStatus({ status, total }: { status: ContagemStatus; total: number }) {
+  const raio = 46;
+  const volta = 2 * Math.PI * raio;
+  let andado = 0;
+  const fatias = STATUS.filter((s) => status[s.id] > 0).map((s) => {
+    const tam = (status[s.id] / total) * volta;
+    const fatia = { ...s, tam, inicio: andado };
+    andado += tam;
+    return fatia;
+  });
+  const separa = fatias.length > 1 ? 2 : 0; // uma frestinha branca entre as fatias
+  return (
+    <div className="pn-rosca">
+      <div className="pn-rosca-grafico" role="img" aria-label={STATUS.map((s) => `${s.nome}: ${pct(status[s.id], total)}%`).join(', ')}>
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r={raio} fill="none" stroke="#efeae1" strokeWidth="18" />
+          {fatias.map((f) => (
+            <circle
+              key={f.id}
+              cx="60" cy="60" r={raio} fill="none" stroke={f.cor} strokeWidth="18"
+              strokeDasharray={`${Math.max(f.tam - separa, 0.01)} ${volta}`}
+              strokeDashoffset={-f.inicio}
+              transform="rotate(-90 60 60)"
+            />
+          ))}
+        </svg>
+        <div className="pn-rosca-centro">
+          <span className="pn-rosca-pct">{pct(status.completa, total)}%</span>
+          <span className="pn-rosca-txt">comeu tudo</span>
+        </div>
+      </div>
+      <ul className="pn-rosca-legenda">
+        {STATUS.map((s) => (
+          <li key={s.id}>
+            <i style={{ background: s.cor }} />
+            <span className="pn-rosca-nome">{s.nome}</span>
+            <span className="pn-rosca-valor" style={{ color: COR_TEXTO_STATUS[s.id] }}>{pct(status[s.id], total)}%</span>
+            <span className="pn-rosca-vezes">{vezes(status[s.id])}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -192,17 +241,7 @@ export function PainelRefeicoes({ resumo, nome }: { resumo: ResumoRefeicoes; nom
 
       {r.comStatus > 0 && (
         <Cartao titulo="Como comeu" sub={`Em ${r.comStatus} ${r.comStatus === 1 ? 'refeição anotada' : 'refeições anotadas'}`}>
-          <div className="pn-barra grande" role="img" aria-label={STATUS.map((s) => `${s.nome}: ${pct(r.status[s.id], r.comStatus)}%`).join(', ')}>
-            {STATUS.map((s) => (r.status[s.id] ? <span key={s.id} style={{ width: `${(r.status[s.id] / r.comStatus) * 100}%`, background: s.cor }} /> : null))}
-          </div>
-          <div className="pn-status-numeros">
-            {STATUS.map((s) => (
-              <div key={s.id}>
-                <span className="pn-status-pct" style={{ color: s.id === 'metade' ? '#b07a12' : s.id === 'nao_comeu' ? '#c2493e' : '#4f9366' }}>{pct(r.status[s.id], r.comStatus)}%</span>
-                <span className="pn-status-nome">{s.nome}</span>
-              </div>
-            ))}
-          </div>
+          <RoscaStatus status={r.status} total={r.comStatus} />
           {destaques.length > 0 && <ul className="pn-destaques">{destaques.map((f) => <li key={f}>{f}</li>)}</ul>}
         </Cartao>
       )}
@@ -238,7 +277,7 @@ export function PainelRefeicoes({ resumo, nome }: { resumo: ResumoRefeicoes; nom
 // ---------- Minijogos ----------
 const COR_RESULTADO: Record<number, string> = { 1: '#e8796f', 2: '#f2b84b', 3: '#6fa981' };
 
-export function PainelJogos({ resumo }: { resumo: ResumoJogos }) {
+export function PainelJogos({ resumo, partidas }: { resumo: ResumoJogos; partidas: Partida[] }) {
   const r = resumo;
   if (r.total === 0) {
     return <Vazio>Nenhum minijogo jogado nesse período. Quando a criança jogar, o desempenho aparece aqui.</Vazio>;
@@ -303,6 +342,8 @@ export function PainelJogos({ resumo }: { resumo: ResumoJogos }) {
         )}
         {r.dificuldades.length > 0 && <p className="pn-dica">Dica: conversem sobre esses alimentos na hora das refeições.</p>}
       </Cartao>
+
+      <HistoricoPartidas partidas={partidas} />
     </>
   );
 }

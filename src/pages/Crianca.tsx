@@ -6,7 +6,6 @@ import { usePagina } from '../lib/usePagina';
 
 const ITENS = [
   { rota: '/painel', icone: 'mdi:view-dashboard', rotulo: 'Painel de acompanhamento' },
-  { rota: '/desempenho', icone: 'mdi:chart-line', rotulo: 'Desempenho' },
   { rota: '/lista-refeicoes', icone: 'mdi:silverware-fork-knife', rotulo: 'Registrar refeições' },
   { rota: '/metas', icone: 'mdi:trophy', rotulo: 'Metas' },
   { rota: '/configuracoes', icone: 'mdi:cog', rotulo: 'Configurações' }

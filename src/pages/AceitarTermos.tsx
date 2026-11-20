@@ -7,7 +7,7 @@ import { listarFilhos } from '../services/filhos';
 import { aceitarTermos } from '../services/termos';
 
 export default function AceitarTermos() {
-  usePagina('Termos de Uso', 'page-white', '#6fa981');
+  usePagina('Política de Privacidade', 'page-white', '#6fa981');
   const navigate = useNavigate();
   const mostrarToast = useToast();
   const [aceito, setAceito] = useState(false);
@@ -38,24 +38,24 @@ export default function AceitarTermos() {
       <h1 className="sticker-heading" style={{ textAlign: 'center' }}>
         <span className="sticker-line on-green">Antes de começar</span>
       </h1>
-      <p className="termos-welcome">Precisamos que você leia e aceite nossos Termos de Uso para continuar.</p>
+      <p className="termos-welcome">Precisamos que você leia e aceite a nossa Política de Privacidade para continuar.</p>
 
       <div className="termos-caixa">
-        <p className="tit">1. Uso da conta</p>
-        <p>Você é responsável por manter os dados de acesso da sua conta em segurança e por todas as informações cadastradas sobre os seus pequenos.</p>
-        <p className="tit">2. Dados dos pequenos</p>
-        <p>As informações cadastradas (metas, refeições e desempenho) são usadas apenas para o funcionamento do app e ficam visíveis somente para o responsável que as cadastrou.</p>
-        <p className="tit">3. Privacidade</p>
-        <p>Não compartilhamos os dados cadastrados com terceiros. Você pode excluir sua conta e seus dados a qualquer momento pela tela de perfil.</p>
-        <p className="tit">4. Alterações</p>
-        <p>Estes termos podem ser atualizados conforme o app evolui. Recomendamos revisá-los de tempos em tempos pela tela de perfil.</p>
+        <p className="tit">O que coletamos</p>
+        <p>Do responsável: nome, e-mail e senha. Da criança: nome e data de nascimento. O app também guarda o desempenho nos minijogos, as metas e as refeições registradas.</p>
+        <p className="tit">Para que usamos</p>
+        <p>Só para o funcionamento do Vale das Frutas e para você acompanhar a criança. Não coletamos nada sem uma finalidade ligada ao app.</p>
+        <p className="tit">Compartilhamento</p>
+        <p>O app é gratuito, não tem anúncios e não compartilha dados pessoais com outras empresas para fins comerciais ou publicitários.</p>
+        <p className="tit">Seus direitos</p>
+        <p>Você pode excluir o perfil da criança a qualquer momento pela área parental e exercer os direitos previstos na LGPD.</p>
       </div>
 
-      <Link className="termos-link" to="/termos">Ler termos completos</Link>
+      <Link className="termos-link" to="/termos">Ler a política completa</Link>
 
       <label className="terms">
         <input type="checkbox" checked={aceito} onChange={(e) => setAceito(e.target.checked)} />
-        <span>Li e aceito os Termos de Uso e a Política de Privacidade</span>
+        <span>Li e aceito a Política de Privacidade e Proteção de Dados</span>
       </label>
 
       <button className="cta" type="button" disabled={!aceito || enviando} onClick={aceitar}>Aceitar e continuar</button>

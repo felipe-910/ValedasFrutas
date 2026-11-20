@@ -45,7 +45,7 @@ const MENU: Passo = {
   rota: '/home',
   alvo: '[data-tutorial="menu"]',
   titulo: 'Menu',
-  texto: 'No menu ficam o seu perfil (para trocar foto, nome e a senha da área dos pais), o Tutorial, os Termos de Uso e o botão de sair.',
+  texto: 'No menu ficam o seu perfil (para trocar foto, nome e a senha da área dos pais), o Tutorial, a Política de Privacidade e o botão de sair.',
 };
 const FIM: Passo = {
   rota: '/home',
@@ -83,13 +83,7 @@ const PASSOS_COM_CRIANCA: Passo[] = [
     rota: '/crianca',
     alvo: '[data-tutorial="painel"]',
     titulo: 'Painel de acompanhamento',
-    texto: 'Um resumo com gráficos de tudo: como ela tem comido nas refeições, como foi nos minijogos e como estão as metas.',
-  },
-  {
-    rota: '/crianca',
-    alvo: '[data-tutorial="desempenho"]',
-    titulo: 'Desempenho',
-    texto: 'O resultado de cada partida dos minijogos (Cesta Saudável, Semáforo Saudável e Monte seu Prato), com o que ela acertou e o que errou.',
+    texto: 'Um resumo com gráficos de tudo: como ela tem comido nas refeições, como foi nos minijogos (com o resultado de cada partida) e como estão as metas.',
   },
   {
     rota: '/crianca',
@@ -135,7 +129,7 @@ const PASSOS_SEM_CRIANCA: Passo[] = [
 
 /* ---------- Tutorial de cada aba da criança ----------
    Na primeira vez que o responsável abre a tela, a Alice explica as partes dela. */
-export type IdTela = 'painel' | 'desempenho' | 'lista-refeicoes' | 'refeicoes' | 'metas' | 'adicionar-meta' | 'configuracoes';
+export type IdTela = 'painel' | 'lista-refeicoes' | 'refeicoes' | 'metas' | 'adicionar-meta' | 'configuracoes';
 type IdTutorial = 'geral' | IdTela;
 
 const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
@@ -143,7 +137,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
     {
       alvo: '.pn-abas',
       titulo: 'Painel de acompanhamento',
-      texto: 'Aqui você escolhe o que quer ver: Refeições (como a criança está comendo), Minijogos (como ela foi nos jogos e quais alimentos mais erra) e Metas (como estão as metas).',
+      texto: 'Aqui você escolhe o que quer ver: Refeições (como a criança está comendo), Minijogos (como ela foi nos jogos, quais alimentos mais erra e o resultado de cada partida) e Metas (como estão as metas).',
     },
     {
       alvo: '.pn-periodo',
@@ -156,29 +150,6 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       opcional: true,
       titulo: 'Números e gráficos',
       texto: 'Aqui aparece o resumo do painel escolhido: quantas vezes ela comeu tudo, pela metade ou não comeu, em cada refeição, e quais alimentos mais aceita ou recusa. Role a tela para ver todos os gráficos.',
-    },
-  ],
-  desempenho: [
-    {
-      alvo: '.perf-pagina .perf-abas',
-      titulo: 'Desempenho nos minijogos',
-      texto: 'Veja as partidas de todos os minijogos ou só de um: Cesta, Semáforo ou Prato.',
-    },
-    {
-      alvo: '.perf-pagina .meal-filter-btn',
-      titulo: 'Filtrar por data',
-      texto: 'Toque no filtro para ver só as partidas desta semana, da semana passada ou de um dia que você escolher.',
-    },
-    {
-      alvo: '.perf-pagina .sort-row',
-      titulo: 'Ordem da lista',
-      texto: 'Mude a ordem das partidas: mais recentes, mais antigas ou pelo nome do jogo.',
-    },
-    {
-      alvo: '.perf-lista .perf-card',
-      opcional: true,
-      titulo: 'Cada partida',
-      texto: 'Cada cartão é uma partida: o jogo, as estrelas que ela ganhou (até 3), quando jogou, com qual personagem, o que acertou e errou e quantos pontos (XP) ganhou.',
     },
   ],
   'lista-refeicoes': [

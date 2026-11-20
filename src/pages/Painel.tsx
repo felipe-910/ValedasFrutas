@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { PainelJogos, PainelMetas, PainelRefeicoes, TelaPainel } from '../components/Paineis';
 import type { AbaPainel } from '../components/Paineis';
-import { inicioDoPeriodo, resumirMetas, resumirPartidas, resumirRefeicoes } from '../lib/painel';
+import { inicioDoPeriodo, partidasDoPeriodo, resumirMetas, resumirPartidas, resumirRefeicoes } from '../lib/painel';
 import type { DiasPainel } from '../lib/painel';
 import { useFilhoAtivo } from '../lib/useFilhoAtivo';
 import { usePagina } from '../lib/usePagina';
@@ -18,7 +18,9 @@ import type { Meta, Partida, Refeicao } from '../types';
 export default function Painel() {
   usePagina('Painel de acompanhamento', 'home-page', '#6fa981');
   const [filho] = useFilhoAtivo();
-  const [aba, setAba] = useState<AbaPainel>('refeicoes');
+  const [busca] = useSearchParams();
+  // /painel?aba=jogos abre direto nos minijogos (o antigo endereço /desempenho vem para cá)
+  const [aba, setAba] = useState<AbaPainel>(() => (busca.get('aba') === 'jogos' ? 'jogos' : busca.get('aba') === 'metas' ? 'metas' : 'refeicoes'));
   const [dias, setDias] = useState<DiasPainel>(7);
   const [refeicoes, setRefeicoes] = useState<Refeicao[] | null>(null);
   const [partidas, setPartidas] = useState<Partida[] | null>(null);
@@ -64,14 +66,15 @@ export default function Painel() {
 
   const resumoRefeicoes = useMemo(() => (refeicoes ? resumirRefeicoes(refeicoes, dias) : null), [refeicoes, dias]);
   const resumoJogos = useMemo(() => (partidas ? resumirPartidas(partidas, dias) : null), [partidas, dias]);
+  const partidasNoPeriodo = useMemo(() => (partidas ? partidasDoPeriodo(partidas, dias) : []), [partidas, dias]);
   const resumoMetas = useMemo(() => (metas ? resumirMetas(metas) : null), [metas]);
 
-  useTutorialDaTela('painel', refeicoes !== null || !!erros.refeicoes); // na primeira vez, a Alice explica esta tela
+  useTutorialDaTela('painel', refeicoes !== null || partidas !== null || metas !== null || Object.keys(erros).length > 0); // na primeira vez, a Alice explica esta tela
   if (!filho) return <Navigate to="/home" replace />;
 
   let conteudo = null;
   if (aba === 'refeicoes' && resumoRefeicoes) conteudo = <PainelRefeicoes resumo={resumoRefeicoes} nome={filho.nome} />;
-  if (aba === 'jogos' && resumoJogos) conteudo = <PainelJogos resumo={resumoJogos} />;
+  if (aba === 'jogos' && resumoJogos) conteudo = <PainelJogos resumo={resumoJogos} partidas={partidasNoPeriodo} />;
   if (aba === 'metas' && resumoMetas) conteudo = <PainelMetas resumo={resumoMetas} />;
 
   return (

@@ -119,13 +119,13 @@ export default function Historias() {
       } else if (msg.tipo === 'fim' && filhoId) {
         const ganho = xpDoJogo(Number(msg.estrelas));
         const jogo = JOGOS.find((j) => j.id === msg.jogo)?.id;
-        // guarda a partida na aba "Desempenho" (jogo, data, hora e como a criança se saiu)
+        // guarda a partida (aparece no Painel > Minijogos) (jogo, data, hora e como a criança se saiu)
         if (jogo) {
           registrarPartida({ filhoId, jogo, estrelas: Number(msg.estrelas), resumo: String(msg.resumo || ''), xp: ganho, narrador: msg.narrador, detalhes: msg.detalhes })
             .catch((err) => {
               console.error('Falha ao salvar a partida:', err);
               // espera o aviso de XP sair da tela para este não ser coberto
-              setTimeout(() => mostrarToast('Esta partida não foi salva no Desempenho.', 3500), 3400);
+              setTimeout(() => mostrarToast('Esta partida não foi salva no painel.', 3500), 3400);
             });
         }
         ganharXp(filhoId, ganho)

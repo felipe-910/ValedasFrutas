@@ -1,37 +1,150 @@
 import BarraTopo from '../components/BarraTopo';
 import { usePagina } from '../lib/usePagina';
 
-const INTRODUCAO = 'Estes Termos de Uso ("Termos") regem o acesso e a utilização do aplicativo Vale das Frutas ("Aplicativo", "nós"), destinado ao acompanhamento de alimentação, metas e desempenho de crianças ("pequenos"), sob responsabilidade de seus pais, mães ou responsáveis legais ("Responsável", "você"). Ao criar uma conta ou utilizar o Aplicativo, você declara ter lido, compreendido e aceitado integralmente estes Termos. Caso não concorde com qualquer disposição aqui prevista, você não deverá utilizar o Aplicativo.';
+// Política de Privacidade e Proteção de Dados do Vale das Frutas (Petalplay).
+// Cada seção é uma lista de blocos: parágrafo (p), subtítulo (sub) ou lista com marcadores (lista).
+type Bloco = { p: string } | { sub: string } | { lista: string[] };
 
-const SECOES: Array<{ titulo: string; texto: string }> = [
-  { titulo: '1. Aceitação dos Termos', texto: 'O uso do Aplicativo é condicionado à aceitação expressa destes Termos. A aceitação ocorre no momento do cadastro e é indispensável para a criação e manutenção da conta.' },
-  { titulo: '2. Elegibilidade e responsabilidade parental', texto: 'O Aplicativo destina-se exclusivamente a usuários maiores de 18 (dezoito) anos, na condição de pai, mãe ou responsável legal pela criança cujos dados venham a ser cadastrados. Ao inserir informações sobre um pequeno, você declara possuir autoridade legal para fazê-lo e assume integral responsabilidade pela veracidade, atualização e adequação de tais informações.' },
-  { titulo: '3. Cadastro e segurança da conta', texto: 'Você é o único responsável pela guarda e confidencialidade de suas credenciais de acesso, bem como por todas as atividades realizadas em sua conta. Comunique-nos imediatamente em caso de suspeita de uso não autorizado. O Aplicativo poderá suspender ou encerrar contas que apresentem informações falsas, incompletas ou uso indevido.' },
-  { titulo: '4. Coleta e uso de dados', texto: 'Para o funcionamento do Aplicativo, coletamos dados da conta do Responsável (como nome e email) e dados inseridos sobre os pequenos (como nome, idade, metas, refeições registradas e desempenho). Esses dados são tratados em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018) e utilizados exclusivamente para viabilizar as funcionalidades do Aplicativo, sendo visíveis apenas ao Responsável que os cadastrou.' },
-  { titulo: '5. Privacidade e compartilhamento', texto: 'Não compartilhamos, vendemos ou cedemos os dados cadastrados a terceiros para fins comerciais. Os dados poderão ser processados por prestadores de infraestrutura (como serviços de autenticação e armazenamento em nuvem) estritamente para operação do Aplicativo. Você pode solicitar a exclusão de sua conta e dos dados associados a qualquer momento pela tela de perfil.' },
-  { titulo: '6. Natureza do serviço', texto: 'O Aplicativo é uma ferramenta de apoio ao acompanhamento de hábitos alimentares e metas infantis, não constituindo aconselhamento médico, nutricional ou psicológico. Recomendações relacionadas à saúde ou alimentação da criança devem ser sempre avaliadas por profissional qualificado.' },
-  { titulo: '7. Propriedade intelectual', texto: 'Todos os direitos sobre o Aplicativo, incluindo marca, layout, textos, ilustrações e código-fonte, pertencem aos seus desenvolvedores, sendo vedada a reprodução, distribuição ou engenharia reversa sem autorização prévia.' },
-  { titulo: '8. Limitação de responsabilidade', texto: 'O Aplicativo é fornecido "no estado em que se encontra". Envidamos esforços razoáveis para manter sua disponibilidade e precisão, mas não garantimos operação ininterrupta ou isenta de falhas, e não nos responsabilizamos por decisões tomadas exclusivamente com base nas informações registradas no Aplicativo.' },
-  { titulo: '9. Cancelamento e encerramento', texto: 'Você pode encerrar sua conta a qualquer momento. Reservamo-nos o direito de suspender ou encerrar contas que violem estes Termos ou a legislação aplicável, mediante notificação quando possível.' },
-  { titulo: '10. Alterações destes Termos', texto: 'Estes Termos podem ser atualizados periodicamente para refletir mudanças no Aplicativo ou na legislação. Alterações relevantes serão comunicadas dentro do Aplicativo, e a continuidade do uso após a atualização implica concordância com os novos Termos.' },
-  { titulo: '11. Legislação aplicável', texto: 'Estes Termos são regidos pelas leis da República Federativa do Brasil, sendo eleito o foro do domicílio do Responsável para dirimir eventuais controvérsias, salvo disposição legal em contrário.' },
-  { titulo: '12. Contato', texto: 'Dúvidas, solicitações ou pedidos relacionados a estes Termos ou aos dados cadastrados podem ser encaminhados pelos canais de suporte disponibilizados no Aplicativo.' }
+const SECOES: Array<{ titulo: string; blocos: Bloco[] }> = [
+  {
+    titulo: '1. Seja bem-vindo ao Vale das Frutas!',
+    blocos: [
+      { p: 'O Vale das Frutas é um aplicativo educativo desenvolvido pela Petalplay, pensado especialmente para crianças de 5 a 8 anos. Por meio de histórias, personagens e minijogos, buscamos tornar a educação alimentar uma experiência divertida, interativa e enriquecedora.' },
+      { p: 'Sabemos que, quando se trata de crianças, a segurança e a privacidade precisam estar em primeiro lugar. Por isso, esta Política de Privacidade explica de maneira clara e transparente quais informações são coletadas, como são utilizadas e quais medidas adotamos para protegê-las.' },
+      { p: 'Nosso compromisso é respeitar a privacidade dos pequenos usuários e garantir que seus dados sejam tratados com responsabilidade, transparência e cuidado.' }
+    ]
+  },
+  {
+    titulo: '2. Quais informações coletamos?',
+    blocos: [
+      { p: 'Para que o Vale das Frutas funcione corretamente, precisamos de algumas informações básicas.' },
+      { sub: 'Informações do responsável:' },
+      { lista: ['Nome;', 'Endereço de e-mail;', 'Senha de acesso.'] },
+      { p: 'Essas informações são utilizadas para criar e proteger a conta do responsável, permitir o acesso à área parental e possibilitar o gerenciamento dos perfis infantis.' },
+      { sub: 'Informações da criança:' },
+      { lista: ['Nome;', 'Data de nascimento.'] },
+      { p: 'Essas informações são utilizadas para criar o perfil infantil, identificar a faixa etária e organizar a experiência educativa de acordo com a proposta do aplicativo.' },
+      { p: 'Além disso, o aplicativo poderá registrar informações relacionadas ao funcionamento de suas atividades, como:' },
+      { lista: ['Desempenho nos minijogos;', 'Metas educativas criadas pelo responsável;', 'Refeições registradas na área parental.'] },
+      { p: 'Esses registros permitem que o responsável acompanhe a experiência da criança no Vale das Frutas.' }
+    ]
+  },
+  {
+    titulo: '3. Por que utilizamos essas informações?',
+    blocos: [
+      { p: 'Cada informação solicitada possui uma finalidade específica.' },
+      { p: 'O nome da criança permite identificar seu perfil dentro do aplicativo, enquanto a data de nascimento auxilia na identificação da faixa etária.' },
+      { p: 'O nome e o e-mail do responsável são utilizados para identificar sua conta e permitir o acesso às funcionalidades de gerenciamento parental.' },
+      { p: 'As informações sobre o desempenho nos minijogos, as metas e as refeições são utilizadas exclusivamente para disponibilizar as funcionalidades educativas e de acompanhamento oferecidas pelo Vale das Frutas.' },
+      { p: 'Não coletamos informações pessoais sem uma finalidade relacionada ao funcionamento do aplicativo.' }
+    ]
+  },
+  {
+    titulo: '4. Como protegemos os dados?',
+    blocos: [
+      { p: 'A segurança das informações é uma prioridade para a Petalplay.' },
+      { p: 'O Vale das Frutas prevê a utilização de mecanismos de segurança, incluindo criptografia, proteção das credenciais e restrição de acesso às informações armazenadas.' },
+      { p: 'Essas medidas têm como objetivo impedir acessos não autorizados, alterações indevidas, divulgação ou utilização inadequada dos dados pessoais.' },
+      { p: 'As informações deverão ser acessadas apenas por sistemas e pessoas devidamente autorizados, conforme as permissões necessárias para o funcionamento e a manutenção do aplicativo.' },
+      { p: 'As senhas dos responsáveis deverão ser protegidas por mecanismos seguros de armazenamento, evitando que sejam mantidas em formato legível.' }
+    ]
+  },
+  {
+    titulo: '5. Compartilhamento de informações',
+    blocos: [
+      { p: 'Atualmente, o Vale das Frutas é gratuito, não possui anúncios e não realiza compartilhamento de dados pessoais com outras empresas para fins comerciais ou publicitários.' },
+      { p: 'As informações coletadas são utilizadas para o funcionamento do próprio aplicativo e de suas funcionalidades educativas.' },
+      { p: 'Caso sejam introduzidos novos serviços, funcionalidades ou parceiros no futuro, esta Política de Privacidade poderá ser atualizada.' },
+      { p: 'Qualquer alteração relevante no tratamento dos dados será comunicada aos responsáveis, e novas autorizações serão solicitadas quando exigidas pela legislação.' }
+    ]
+  },
+  {
+    titulo: '6. Controle parental e acompanhamento',
+    blocos: [
+      { p: 'No Vale das Frutas, a criação do perfil infantil é realizada pelo responsável legal.' },
+      { p: 'A área parental permite:' },
+      { lista: ['Criar e gerenciar o perfil da criança;', 'Acompanhar o desempenho nos minijogos;', 'Criar metas educativas;', 'Registrar refeições;', 'Excluir o perfil infantil.'] },
+      { p: 'O responsável permanece como a principal pessoa responsável pelo gerenciamento do perfil da criança dentro do aplicativo.' }
+    ]
+  },
+  {
+    titulo: '7. Exclusão das informações',
+    blocos: [
+      { p: 'O responsável poderá solicitar a exclusão do perfil infantil a qualquer momento por meio da área parental.' },
+      { p: 'A solicitação deverá resultar na exclusão dos dados pessoais associados ao perfil, respeitadas as hipóteses legais de conservação previstas na legislação.' },
+      { p: 'Nosso objetivo é garantir que os responsáveis possam exercer controle sobre as informações pessoais de seus filhos.' }
+    ]
+  },
+  {
+    titulo: '8. Quais são os seus direitos?',
+    blocos: [
+      { p: 'A Lei Geral de Proteção de Dados Pessoais (LGPD) garante diversos direitos relacionados à privacidade e ao tratamento de dados pessoais.' },
+      { p: 'O responsável legal poderá solicitar, conforme aplicável:' },
+      { lista: [
+        'Confirmação sobre a existência de tratamento de dados;',
+        'Acesso às informações pessoais;',
+        'Correção de dados incompletos ou incorretos;',
+        'Exclusão de dados pessoais, observadas as hipóteses legais;',
+        'Informações sobre o tratamento e eventual compartilhamento;',
+        'Revogação do consentimento, quando aplicável.'
+      ] },
+      { p: 'Para exercer esses direitos, o responsável poderá entrar em contato por meio do canal oficial de atendimento relacionado à privacidade.' },
+      { p: 'Contato: petalplaytech@gmail.com' }
+    ]
+  },
+  {
+    titulo: '9. Compromisso com a legislação',
+    blocos: [
+      { p: 'O Vale das Frutas busca desenvolver suas funcionalidades de acordo com os princípios estabelecidos pela legislação brasileira, especialmente:' },
+      { lista: [
+        'Lei nº 13.709/2018 — Lei Geral de Proteção de Dados Pessoais (LGPD);',
+        'Lei nº 8.069/1990 — Estatuto da Criança e do Adolescente (ECA);',
+        'Lei nº 15.211/2025 — Estatuto Digital da Criança e do Adolescente (ECA Digital).'
+      ] },
+      { p: 'A LGPD estabelece que o tratamento de dados pessoais de crianças deve ocorrer considerando seu melhor interesse, com proteção especial e transparência.' },
+      { p: 'O ECA Digital reforça a importância de ambientes digitais seguros, da proteção da privacidade e da supervisão dos responsáveis.' },
+      { p: 'A Petalplay reconhece a importância dessas disposições e busca incorporá-las ao desenvolvimento do Vale das Frutas.' }
+    ]
+  },
+  {
+    titulo: '10. Atualizações desta Política',
+    blocos: [
+      { p: 'Esta Política de Privacidade poderá ser atualizada para acompanhar mudanças nas funcionalidades do Vale das Frutas, na tecnologia utilizada ou na legislação aplicável.' },
+      { p: 'Caso ocorram alterações relevantes na forma como os dados pessoais são utilizados, os responsáveis serão informados previamente.' },
+      { p: 'Quando uma alteração exigir novo consentimento, ele será solicitado antes do início do novo tratamento.' },
+      { p: 'A utilização do aplicativo não será considerada, por si só, autorização para novas finalidades que exijam consentimento específico.' }
+    ]
+  },
+  {
+    titulo: '11. Nosso compromisso',
+    blocos: [
+      { p: 'O Vale das Frutas nasceu com o propósito de transformar a educação alimentar em uma experiência divertida e positiva para as crianças.' },
+      { p: 'Acreditamos que a tecnologia deve contribuir para o desenvolvimento infantil sem deixar de lado a segurança, a privacidade e o respeito.' },
+      { p: 'Por isso, assumimos o compromisso de tratar as informações pessoais com responsabilidade, transparência e cuidado, priorizando sempre o melhor interesse das crianças.' }
+    ]
+  }
 ];
 
+function MostrarBloco({ bloco }: { bloco: Bloco }) {
+  if ('sub' in bloco) return <p className="sub">{bloco.sub}</p>;
+  if ('lista' in bloco) return <ul>{bloco.lista.map((item) => <li key={item}>{item}</li>)}</ul>;
+  return <p>{bloco.p}</p>;
+}
+
 export default function Termos() {
-  usePagina('Termos de Uso', 'home-page', '#6fa981');
+  usePagina('Política de Privacidade', 'home-page', '#6fa981');
 
   return (
     <>
-      <BarraTopo titulo="Termos de Uso" voltarPara="/home" />
+      <BarraTopo titulo="Política de Privacidade" voltarPara="/home" />
 
       <div className="child-body termos-doc">
-        <p>{INTRODUCAO}</p>
+        <h1 className="termos-doc-titulo">Política de Privacidade e Proteção de Dados</h1>
         {SECOES.map((s) => (
-          <div key={s.titulo}>
+          <section key={s.titulo}>
             <p className="tit">{s.titulo}</p>
-            <p>{s.texto}</p>
-          </div>
+            {s.blocos.map((b, i) => <MostrarBloco key={i} bloco={b} />)}
+          </section>
         ))}
       </div>
     </>

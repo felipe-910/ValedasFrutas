@@ -173,8 +173,8 @@ export default function Home() {
             <Link className="account-card" to="/termos" style={{ borderColor: '#f5c9c6' }}>
               <span className="account-card-icon" style={{ color: '#f2726c' }}><Icone nome="mdi:file-document-outline" cor="f2726c" tamanho={26} /></span>
               <span className="account-card-text">
-                <span className="account-card-title">Termos de Uso</span>
-                <span className="account-card-sub">Leia nossos termos</span>
+                <span className="account-card-title">Política de Privacidade</span>
+                <span className="account-card-sub">Como cuidamos dos dados</span>
               </span>
               <span className="account-card-chevron">&#8250;</span>
             </Link>

@@ -5,7 +5,6 @@ import AdicionarMeta from './pages/AdicionarMeta';
 import Cadastro from './pages/Cadastro';
 import Configuracoes from './pages/Configuracoes';
 import Crianca from './pages/Crianca';
-import Desempenho from './pages/Desempenho';
 import EscolhaPersonagem from './pages/EscolhaPersonagem';
 import Historias from './pages/Historias';
 import Home from './pages/Home';
@@ -55,7 +54,7 @@ export default function App() {
         <Route path="/historias" element={<Historias />} />
         <Route path="/crianca" element={<Crianca />} />
         <Route path="/painel" element={<Painel />} />
-        <Route path="/desempenho" element={<Desempenho />} />
+        <Route path="/desempenho" element={<Navigate to="/painel?aba=jogos" replace />} />
         <Route path="/configuracoes" element={<Configuracoes />} />
         <Route path="/lista-refeicoes" element={<ListaRefeicoes />} />
         <Route path="/refeicoes" element={<Refeicoes />} />

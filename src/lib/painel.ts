@@ -32,6 +32,11 @@ function dentroDoPeriodo<T extends { criadoEm?: Refeicao['criadoEm'] }>(lista: T
   return lista.filter((item) => dataDe(item).getTime() >= ini);
 }
 
+// Partidas jogadas dentro do período (para a lista de partidas do painel)
+export function partidasDoPeriodo(todas: Partida[], dias: DiasPainel, agora: Date = new Date()): Partida[] {
+  return dentroDoPeriodo(todas, dias, agora);
+}
+
 // Os "baldes" do gráfico de barras: um por dia (7 dias) ou 5 blocos de 6 dias (30 dias),
 // para que toda barra tenha a sua data embaixo
 export interface Balde {

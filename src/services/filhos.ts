@@ -52,7 +52,7 @@ export async function deleteFilho(id: string): Promise<void> {
 }
 
 // Decide para onde mandar o responsável depois do login (devolve o caminho da rota):
-// se é a primeira vez (ainda não aceitou os Termos de Uso) -> tela de aceite (/aceitar-termos)
+// se é a primeira vez (ainda não aceitou a Política de Privacidade) -> tela de aceite (/aceitar-termos)
 // se ainda não tem nenhum pequeno cadastrado -> onboarding (/novo-pequeno)
 // se já tem -> vai direto pra /home
 export async function destinoAposLogin(): Promise<string> {
@@ -61,7 +61,7 @@ export async function destinoAposLogin(): Promise<string> {
     aceitouTermos = await termosAceitos();
   } catch (err) {
     // Nunca deixa um erro aqui travar o login do usuário
-    console.error('Falha ao verificar os Termos de Uso:', err);
+    console.error('Falha ao verificar a Política de Privacidade:', err);
     aceitouTermos = true;
   }
   if (!aceitouTermos) return '/aceitar-termos';
