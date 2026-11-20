@@ -96,7 +96,7 @@ export default function SugestoesMetas({ filho, estado }: { filho: FilhoAtivo; e
 
   function criar(s: SugestaoMeta) {
     limparMetaEdicaoId();
-    guardarMetaSugerida({ alimento: s.alimento, titulo: s.titulo, descricao: s.descricao, dias: s.dias, cor: GRUPOS[s.grupo].cor });
+    guardarMetaSugerida({ tipo: s.tipo, alimento: s.alimento, titulo: s.titulo, descricao: s.descricao, dias: s.dias, cor: GRUPOS[s.grupo].cor });
     navigate('/adicionar-meta');
   }
 

@@ -36,6 +36,9 @@ function regraDaMeta(meta: Meta): string {
       ? `Todas as refeições completas, ${plural(total)}, ${xpTotal} XP no total`
       : `${lista.charAt(0).toUpperCase() + lista.slice(1)} ${nomes.length > 1 ? 'completos' : 'completo(a)'}, ${plural(total)}, ${xpTotal} XP no total`;
   }
+  if (meta.tipo === 'ausencia') {
+    return `Ficar sem comer ${meta.alimento}: conta cada dia já encerrado com refeições registradas e sem ${meta.alimento}, ${plural(total)}, ${xpTotal} XP no total`;
+  }
   return `Comer ${meta.alimento} em uma refeição completa, ${plural(total)}, ${xpTotal} XP no total`;
 }
 

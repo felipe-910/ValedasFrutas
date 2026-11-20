@@ -59,6 +59,7 @@ export function limparMetaEdicaoId(): void {
 
 // Meta sugerida pelo app (tela de metas -> formulário da meta de alimento já preenchido)
 export interface MetaSugerida {
+  tipo?: 'alimento' | 'ausencia'; // sem tipo = meta de alimento
   alimento: string;
   titulo: string;
   descricao: string;

@@ -34,10 +34,42 @@ export function corteDaMeta(meta: Pick<Meta, 'inicioEm' | 'criadoEm'>): Date {
   return new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
 }
 
+// Meta de ausência: conta cada dia JÁ TERMINADO (antes de hoje) que teve refeição registrada
+// e em que a criança não comeu o alimento. Só dias encerrados, para o progresso nunca voltar atrás
+// se ela comer o alimento mais tarde no mesmo dia. Alimento servido e recusado ("não comeu") não conta como comido.
+function diasSemOAlimento(meta: Meta, refeicoes: Refeicao[], agora: Date): number {
+  const corte = corteDaMeta(meta).getTime();
+  const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
+  const alvo = normalizar(meta.alimento);
+  const comRegistro = new Set<string>();
+  const comeu = new Set<string>();
+  refeicoes.forEach((r) => {
+    const data = paraData(r.criadoEm);
+    if (!data || data.getTime() < corte || data.getTime() >= hoje) return;
+    const dia = chaveDoDia(data);
+    comRegistro.add(dia);
+    if (r.status !== 'nao_comeu' && (r.alimentos || []).some((a) => normalizar(a.nome) === alvo)) comeu.add(dia);
+  });
+  let dias = 0;
+  comRegistro.forEach((dia) => { if (!comeu.has(dia)) dias++; });
+  return dias;
+}
+
 // Um dia só conta quando TODAS as refeições da meta foram completas nele
-// (meta de alimento: o alimento foi comido em alguma refeição completa do dia).
+// (meta de alimento: o alimento foi comido em alguma refeição completa do dia;
+//  meta de ausência: veja diasSemOAlimento).
 // O XP é dividido igualmente pelos dias: ao cumprir o último dia, a criança tem o XP total.
-export function calcularProgressoMeta(meta: Meta, refeicoes: Refeicao[]): ProgressoMeta {
+export function calcularProgressoMeta(meta: Meta, refeicoes: Refeicao[], agora: Date = new Date()): ProgressoMeta {
+  if (meta.tipo === 'ausencia') {
+    const total = meta.dias || 0;
+    const diasCumpridos = Math.min(diasSemOAlimento(meta, refeicoes, agora), total);
+    const xpTotal = xpTotalDaMeta(meta);
+    return {
+      diasCumpridos,
+      xpAtual: total ? Math.round((xpTotal * diasCumpridos) / total) : 0,
+      concluida: total > 0 && diasCumpridos >= total
+    };
+  }
   const corte = corteDaMeta(meta).getTime();
   const alvo = refeicoesDaMeta(meta);
   const porDia = new Map<string, Set<string>>(); // dia -> Set de refeições completas (ou 'ok', no caso de alimento)

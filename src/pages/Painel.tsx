@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { PainelJogos, PainelMetas, PainelRefeicoes, TelaPainel } from '../components/Paineis';
+import RecadoLuca from '../components/RecadoLuca';
 import type { AbaPainel } from '../components/Paineis';
 import { inicioDoPeriodo, partidasDoPeriodo, resumirMetas, resumirPartidas, resumirRefeicoes } from '../lib/painel';
 import type { DiasPainel } from '../lib/painel';
@@ -73,7 +74,8 @@ export default function Painel() {
   if (!filho) return <Navigate to="/home" replace />;
 
   let conteudo = null;
-  if (aba === 'refeicoes' && resumoRefeicoes) conteudo = <PainelRefeicoes resumo={resumoRefeicoes} nome={filho.nome} />;
+  // o Recado do Luca fica no topo das refeições e sempre olha os últimos 7 dias
+  if (aba === 'refeicoes' && resumoRefeicoes && refeicoes) conteudo = <><RecadoLuca refeicoes={refeicoes} nome={filho.nome} /><PainelRefeicoes resumo={resumoRefeicoes} nome={filho.nome} /></>;
   if (aba === 'jogos' && resumoJogos) conteudo = <PainelJogos resumo={resumoJogos} partidas={partidasNoPeriodo} />;
   if (aba === 'metas' && resumoMetas) conteudo = <PainelMetas resumo={resumoMetas} />;
 

@@ -351,6 +351,7 @@ export function PainelJogos({ resumo, partidas }: { resumo: ResumoJogos; partida
 // ---------- Metas ----------
 function regraCurta(meta: Meta): string {
   if (meta.tipo === 'alimento') return `Comer ${meta.alimento || 'o alimento'} em refeição completa`;
+  if (meta.tipo === 'ausencia') return `Ficar sem comer ${meta.alimento || 'o alimento'}`;
   if (meta.tipo === 'refeicao') {
     const tipos = refeicoesDaMeta(meta);
     if (tipos.length === 5) return 'Todas as refeições completas';

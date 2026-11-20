@@ -19,7 +19,8 @@ import type { Meta, TipoMeta, TipoRefeicao } from '../types';
 const TIPOS_META: Array<{ id: TipoMeta; titulo: string; texto: string }> = [
   { id: 'simples', titulo: 'Meta simples', texto: 'Uma tarefa que você marca como concluída.' },
   { id: 'refeicao', titulo: 'Meta de refeição', texto: 'A criança ganha XP quando completa as refeições escolhidas (uma, várias ou todas).' },
-  { id: 'alimento', titulo: 'Meta de alimento', texto: 'A criança ganha XP quando come um alimento em uma refeição completa.' }
+  { id: 'alimento', titulo: 'Meta de alimento', texto: 'A criança ganha XP quando come um alimento em uma refeição completa.' },
+  { id: 'ausencia', titulo: 'Meta de ausência', texto: 'A criança ganha XP a cada dia que passa sem comer um alimento (por exemplo nugget, salsicha ou refrigerante).' }
 ];
 
 const RECOMPENSAS: Array<{ nome: string; cor: string; icone: string }> = [
@@ -44,11 +45,11 @@ export default function AdicionarMeta() {
   const [metaEdicaoId] = useState(() => lerMetaEdicaoId());
   const [metaEmEdicao, setMetaEmEdicao] = useState<Meta | null>(null);
 
-  // Meta sugerida pelo app (vem da tela de metas): o formulário já começa preenchido com uma meta de alimento
+  // Meta sugerida pelo app (vem da tela de metas): o formulário já começa preenchido (meta de alimento ou de ausência)
   const [sugerida] = useState(() => (metaEdicaoId ? null : lerMetaSugerida()));
 
   const [passo, setPasso] = useState<1 | 2>(1);
-  const [tipo, setTipo] = useState<TipoMeta>(sugerida ? 'alimento' : 'simples');
+  const [tipo, setTipo] = useState<TipoMeta>(sugerida ? (sugerida.tipo === 'ausencia' ? 'ausencia' : 'alimento') : 'simples');
   const [titulo, setTitulo] = useState(sugerida?.titulo ?? '');
   const [descricao, setDescricao] = useState(sugerida?.descricao ?? '');
   const [refeicoes, setRefeicoes] = useState<TipoRefeicao[]>([]);
@@ -77,7 +78,7 @@ export default function AdicionarMeta() {
         setTitulo(meta.titulo || '');
         setDescricao(meta.descricao || '');
         if (meta.tipo === 'refeicao') setRefeicoes(refeicoesDaMeta(meta));
-        if (meta.tipo === 'alimento') setAlimento(meta.alimento || '');
+        if (meta.tipo === 'alimento' || meta.tipo === 'ausencia') setAlimento(meta.alimento || '');
         if (meta.tipo !== 'simples') setDias(meta.dias ? String(meta.dias) : '');
         setCor(meta.cor || '#f2726c');
         setRecompensa(meta.recompensa || '');
@@ -117,13 +118,14 @@ export default function AdicionarMeta() {
       if (lista.length === 1) return `Completar ${lista[0].toLowerCase()}`;
       return `Completar ${lista.slice(0, -1).map((t) => t.toLowerCase()).join(', ')} e ${lista[lista.length - 1].toLowerCase()}`;
     }
+    if (tipo === 'ausencia') return `Ficar sem ${alimento.trim().toLowerCase()}`;
     return `Comer ${alimento.trim()}`;
   }
 
   function irParaRecompensa() {
     if (!titulo.trim() && tipo === 'simples') { mostrarToast('Digite qual é a meta.'); return; }
     if (tipo === 'refeicao' && !refeicoes.length) { mostrarToast('Escolha pelo menos uma refeição.'); return; }
-    if (tipo === 'alimento' && !alimento.trim()) { mostrarToast('Informe o alimento da meta.'); return; }
+    if ((tipo === 'alimento' || tipo === 'ausencia') && !alimento.trim()) { mostrarToast('Informe o alimento da meta.'); return; }
     if (tipo !== 'simples' && (!diasNumero || diasNumero < 1)) { mostrarToast('Informe por quantos dias.'); return; }
     setPasso(2);
   }
@@ -223,10 +225,13 @@ export default function AdicionarMeta() {
               </div>
             )}
 
-            {/* Meta de alimento */}
-            {tipo === 'alimento' && (
+            {/* Meta de alimento / de ausência */}
+            {(tipo === 'alimento' || tipo === 'ausencia') && (
               <div>
-                <label className="form-label" htmlFor="alimentoMeta">Qual alimento?</label>
+                <label className="form-label" htmlFor="alimentoMeta">{tipo === 'ausencia' ? 'Ficar sem comer qual alimento?' : 'Qual alimento?'}</label>
+                {tipo === 'ausencia' && (
+                  <p className="form-sub">Conta cada dia que já terminou, com refeições registradas, em que a criança não comeu esse alimento.</p>
+                )}
                 <BuscaAlimento
                   id="alimentoMeta"
                   placeholder="Buscar ou digitar o alimento..."
@@ -254,7 +259,11 @@ export default function AdicionarMeta() {
                   onChange={(e) => setDias(e.target.value)}
                 />
                 <p className="xp-preview">{textoPrevia()}</p>
-                <p className="form-sub" style={{ marginTop: 8, marginBottom: 22 }}>Você só informa os dias. O sistema define o XP, acompanha as refeições completas e conclui a meta sozinho no último dia.</p>
+                <p className="form-sub" style={{ marginTop: 8, marginBottom: 22 }}>
+                  {tipo === 'ausencia'
+                    ? 'Você só informa os dias. O sistema define o XP, confere as refeições registradas e conclui a meta sozinho quando ela completar os dias sem o alimento.'
+                    : 'Você só informa os dias. O sistema define o XP, acompanha as refeições completas e conclui a meta sozinho no último dia.'}
+                </p>
               </div>
             )}
 

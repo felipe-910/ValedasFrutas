@@ -155,7 +155,7 @@ export async function verificarPrazos(): Promise<void> {
     for (const d of metasSnap.docs) {
       const meta = { id: d.id, ...d.data() } as Meta;
       if (meta.concluida) continue;
-      if (meta.tipo !== 'refeicao' && meta.tipo !== 'alimento') continue; // só essas têm prazo em dias
+      if (meta.tipo !== 'refeicao' && meta.tipo !== 'alimento' && meta.tipo !== 'ausencia') continue; // só essas têm prazo em dias
       const prazo = prazoDaMeta(meta);
       if (!prazo) continue;
 

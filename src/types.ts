@@ -59,7 +59,8 @@ export interface Idade {
 }
 
 // ---------- Metas ----------
-export type TipoMeta = 'simples' | 'refeicao' | 'alimento';
+// ausencia: ficar sem comer um alimento (ex.: nugget) por alguns dias
+export type TipoMeta = 'simples' | 'refeicao' | 'alimento' | 'ausencia';
 
 export interface Meta {
   id: string;

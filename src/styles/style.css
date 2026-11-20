@@ -2317,6 +2317,29 @@ body.historias-page {
 .pn-rosca-valor { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 18px; line-height: 1; }
 .pn-rosca-vezes { grid-column: 2 / 4; font-size: 11.5px; font-weight: 700; color: rgba(0,0,0,.45); margin-top: -2px; }
 
+/* Recado do Luca (painel > Refeições): como está a alimentação nos últimos 7 dias */
+.luca-recado { background: #fff; border-radius: 16px; padding: 14px 16px 16px; margin-bottom: 14px; box-shadow: 0 2px 0 rgba(0,0,0,.05); border: 2px solid #cfe6d6; }
+.luca-recado.clima-atencao { border-color: #f6d7a5; }
+.luca-recado-topo { display: flex; align-items: center; gap: 10px; }
+.luca-recado-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; background: #eaf5ec; border: 2px solid #fff; box-shadow: 0 0 0 2px #cfe6d6; }
+.luca-recado-titulos { flex: 1; min-width: 0; }
+.luca-recado-titulo { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 18px; color: #2f6b47; line-height: 1.1; }
+.luca-recado-periodo { display: block; font-size: 12px; font-weight: 700; color: rgba(0,0,0,.5); margin-top: 2px; }
+.luca-recado-clima { flex: none; font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: #e3f2e7; color: #2f6b47; white-space: nowrap; }
+.clima-atencao .luca-recado-clima { background: #fdf0d9; color: #9a6a10; }
+.luca-recado-fala { position: relative; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: #f1f8f3; font-size: 14px; font-weight: 700; color: #234; line-height: 1.4; }
+.luca-recado-fala::before { content: ''; position: absolute; top: -7px; left: 22px; border: 7px solid transparent; border-top: 0; border-bottom-color: #f1f8f3; }
+.luca-recado-bloco { margin-top: 12px; }
+.luca-recado-bloco-titulo { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.luca-recado-bloco.bom .luca-recado-bloco-titulo { color: #2f7d46; }
+.luca-recado-bloco.atencao .luca-recado-bloco-titulo { color: #b0700c; }
+.luca-recado-bloco ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.luca-recado-bloco li { position: relative; padding-left: 22px; font-size: 13.5px; font-weight: 700; color: #333; line-height: 1.4; }
+.luca-recado-bloco li::before { position: absolute; left: 0; top: 0; width: 16px; text-align: center; font-weight: 900; }
+.luca-recado-bloco.bom li::before { content: '\2713'; color: #2f7d46; }
+.luca-recado-bloco.atencao li::before { content: '!'; color: #fff; background: #f2b84b; border-radius: 50%; width: 16px; height: 16px; line-height: 16px; font-size: 11px; top: 2px; }
+.luca-recado-dica { margin-top: 12px; font-size: 13px; font-weight: 700; color: rgba(0,0,0,.6); line-height: 1.4; font-style: italic; }
+
 /* Partidas (o antigo Desempenho) dentro do painel > Minijogos */
 .pn-historico { margin-top: 6px; }
 .pn-historico .perf-abas { margin-top: 10px; }

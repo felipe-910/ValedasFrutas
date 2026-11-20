@@ -149,7 +149,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       alvo: '.pn-pagina [role="tabpanel"] > :first-child',
       opcional: true,
       titulo: 'Números e gráficos',
-      texto: 'Aqui aparece o resumo do painel escolhido: quantas vezes ela comeu tudo, pela metade ou não comeu, em cada refeição, e quais alimentos mais aceita ou recusa. Role a tela para ver todos os gráficos.',
+      texto: 'Aqui aparece o resumo do painel escolhido. Em Refeições, o Luca deixa um recado sobre a alimentação dos últimos 7 dias; depois vêm quantas vezes ela comeu tudo, pela metade ou não comeu, em cada refeição, e quais alimentos mais aceita ou recusa. Role a tela para ver todos os gráficos.',
     },
   ],
   'lista-refeicoes': [
@@ -217,7 +217,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
       alvo: '.goal-card',
       opcional: true,
       titulo: 'Cada meta',
-      texto: 'O cartão mostra o nome da meta, a recompensa e quanto já avançou. As metas de refeição e de alimento avançam e terminam sozinhas, com as refeições que você anota. As simples você marca como concluída aqui.',
+      texto: 'O cartão mostra o nome da meta, a recompensa e quanto já avançou. As metas de refeição, de alimento e de ausência avançam e terminam sozinhas, com as refeições que você anota. As simples você marca como concluída aqui.',
     },
     {
       alvo: '.goal-card .goal-actions',
@@ -240,7 +240,7 @@ const TUTORIAIS_TELAS: Record<IdTela, Passo[]> = {
     {
       alvo: '.goal-type-options',
       titulo: 'Tipo de meta',
-      texto: 'Simples: uma tarefa que você marca como concluída. De refeição: conta os dias em que ela completa as refeições escolhidas. De alimento: conta os dias em que ela come um alimento (como brócolis) numa refeição completa.',
+      texto: 'Simples: uma tarefa que você marca como concluída. De refeição: conta os dias em que ela completa as refeições escolhidas. De alimento: conta os dias em que ela come um alimento (como brócolis) numa refeição completa. De ausência: conta os dias em que ela fica sem comer um alimento (como nugget ou refrigerante).',
     },
     {
       alvo: '#tituloMeta',

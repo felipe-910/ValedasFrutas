@@ -4,9 +4,9 @@
 //   1. grupo que não apareceu em nenhuma refeição   -> "não comeu nenhuma fruta nas últimas 8 refeições"
 //   2. grupo que apareceu, mas não foi comido        -> "verduras e legumes apareceram 3 vezes e não comeu nenhuma"
 //   3. grupo comido só uma vez em muitas refeições    -> "comeu uma proteína em só 1 das últimas 9 refeições"
-//   4. muitos ultraprocessados (nugget, salsicha...)  -> sugere uma proteína
-// Cada sugestão já vem com uma META DE ALIMENTO pronta (ex.: "Comer banana"), que o responsável pode
-// ajustar antes de salvar. O alimento escolhido é, de preferência, um do grupo que a criança já comeu tudo.
+//   4. muitos ultraprocessados (nugget, salsicha...)  -> META DE AUSÊNCIA do que mais apareceu ("Ficar sem nugget")
+// Nos casos 1 a 3 a sugestão vem com uma META DE ALIMENTO pronta (ex.: "Comer banana"), de preferência com um
+// alimento do grupo que a criança já comeu tudo. Tudo pode ser ajustado antes de salvar.
 import { paraData } from './tempo';
 import { ALIMENTO_PADRAO, GRUPOS, GRUPOS_DE_META, grupoDoAlimento } from './gruposAlimentares';
 import type { IdGrupo } from './gruposAlimentares';
@@ -20,6 +20,7 @@ const DIAS_DA_META = 5;
 export type MotivoSugestao = 'nenhum' | 'recusou' | 'pouco' | 'ultraprocessados';
 
 export interface SugestaoMeta {
+  tipo: 'alimento' | 'ausencia'; // tipo da meta sugerida
   id: string; // ex.: "frutas-nenhum" (usado para "agora não")
   grupo: IdGrupo; // grupo que faltou
   motivo: MotivoSugestao;
@@ -31,7 +32,8 @@ export interface SugestaoMeta {
   dias: number;
 }
 
-const PRIORIDADE: Record<MotivoSugestao, number> = { nenhum: 0, recusou: 1, ultraprocessados: 2, pouco: 3 };
+// a meta de ausência (muitos ultraprocessados) vem logo depois do que falta de vez
+const PRIORIDADE: Record<MotivoSugestao, number> = { nenhum: 0, ultraprocessados: 1, recusou: 2, pouco: 3 };
 
 const refeicoesTxt = (n: number) => `${n === 1 ? 'a última refeição registrada' : `as últimas ${n} refeições registradas`}`;
 
@@ -81,6 +83,7 @@ function montar(grupo: IdGrupo, motivo: MotivoSugestao, mensagem: string, nome: 
     ? `${nome} já comeu tudo quando teve ${alimento.toLowerCase()}, então é um bom começo.`
     : `Se preferir, troque por outro alimento do grupo: ${info.exemplos.split(', ').filter((x) => x !== alimento.toLowerCase()).join(', ')}.`;
   return {
+    tipo: 'alimento',
     id: `${grupo}-${motivo}`,
     grupo,
     motivo,
@@ -101,9 +104,9 @@ export function sugerirMetas(refeicoes: Refeicao[], metas: Meta[], nome: string,
   const n = janela.length;
   if (n < MIN_REFEICOES) return [];
 
-  // grupos que já têm uma meta de alimento aberta (ex.: "Comer maçã" cobre frutas)
+  // grupos que já têm uma meta aberta (ex.: "Comer maçã" cobre frutas; "Ficar sem nugget" cobre ultraprocessados)
   const comMetaAberta = new Set(
-    metas.filter((m) => m.tipo === 'alimento' && !m.concluida).map((m) => grupoDoAlimento(m.alimento)).filter(Boolean)
+    metas.filter((m) => (m.tipo === 'alimento' || m.tipo === 'ausencia') && !m.concluida).map((m) => grupoDoAlimento(m.alimento)).filter(Boolean)
   );
   const porRefeicao = janela.map((r) => ({ r, grupos: gruposDaRefeicao(r) }));
   const sugestoes: SugestaoMeta[] = [];
@@ -125,12 +128,40 @@ export function sugerirMetas(refeicoes: Refeicao[], metas: Meta[], nome: string,
     }
   }
 
-  // Muitos ultraprocessados: sugere uma proteína (frango, carne, ovo, feijão), se ainda não sugeriu
-  const comUltra = porRefeicao.filter((x) => x.grupos.has('ultraprocessados')).length;
-  if (comUltra >= Math.max(3, Math.ceil(n * 0.4)) && !comMetaAberta.has('proteinas') && !sugestoes.some((s) => s.grupo === 'proteinas')) {
-    sugestoes.push(montar('proteinas', 'ultraprocessados',
-      `Nugget, salsicha ou linguiça apareceram em ${comUltra} d${refeicoesTxt(n)} de ${nome}.`, nome, refeicoes));
+  // Muitos ultraprocessados: meta de AUSÊNCIA do que mais apareceu (só nesse caso o app sugere ausência)
+  // só conta o que foi comido (refeição com "não comeu" fica de fora), igual ao Recado do Luca
+  const comUltra = porRefeicao.filter((x) => x.grupos.has('ultraprocessados') && x.r.status !== 'nao_comeu');
+  if (comUltra.length >= Math.max(3, Math.ceil(n * 0.4)) && !comMetaAberta.has('ultraprocessados')) {
+    const vezes = new Map<string, { nome: string; vezes: number }>();
+    comUltra.forEach(({ r }) => {
+      (r.alimentos || []).forEach((a) => {
+        if (grupoDoAlimento(a.nome) !== 'ultraprocessados') return;
+        const chave = a.nome.trim().toLowerCase();
+        const atual = vezes.get(chave) ?? { nome: a.nome.trim(), vezes: 0 };
+        atual.vezes++;
+        vezes.set(chave, atual);
+      });
+    });
+    const maisComum = [...vezes.values()].sort((a, b) => b.vezes - a.vezes)[0];
+    if (maisComum) {
+      const alimento = maisComum.nome;
+      const titulo = `Ficar sem ${alimento.toLowerCase()}`;
+      const mensagem = `Ultraprocessados (como nugget, salsicha e linguiça) apareceram em ${comUltra.length} d${refeicoesTxt(n)} de ${nome}. O que mais apareceu foi ${alimento.toLowerCase()} (${maisComum.vezes === 1 ? '1 vez' : `${maisComum.vezes} vezes`}).`;
+      const porque = `Cada dia sem ${alimento.toLowerCase()} conta para a meta. Uma boa troca é frango, carne ou ovo.`;
+      sugestoes.push({
+        tipo: 'ausencia',
+        id: 'ultraprocessados-ausencia',
+        grupo: 'ultraprocessados',
+        motivo: 'ultraprocessados',
+        mensagem,
+        convite: `Que tal a meta de ausência "${titulo.toLowerCase()}" por ${DIAS_DA_META} dias? ${porque}`,
+        alimento,
+        titulo,
+        descricao: `Meta sugerida pelo app: ${mensagem} ${porque}`,
+        dias: DIAS_DA_META
+      });
+    }
   }
 
-  return sugestoes.sort((a, b) => PRIORIDADE[a.motivo] - PRIORIDADE[b.motivo]).slice(0, 3);
+  return sugestoes.sort((a, b) => PRIORIDADE[a.motivo] - PRIORIDADE[b.motivo]).slice(0, 4);
 }

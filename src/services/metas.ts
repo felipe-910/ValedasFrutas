@@ -36,19 +36,20 @@ const COLECAO = 'metas';
 // XP definido pelo sistema (o pai informa só os dias)
 export const XP_POR_REFEICAO = 10; // por refeição completa, por dia
 export const XP_POR_ALIMENTO = 15; // por dia em que o alimento foi comido
+export const XP_POR_AUSENCIA = 15; // por dia sem comer o alimento (meta de ausência)
 
 export function calcularXpMeta({ tipo, qtdRefeicoes = 0, dias = 0 }: {
   tipo: TipoMeta;
   qtdRefeicoes?: number;
   dias?: number;
 }): { xpPorDia: number; xpTotal: number } {
-  const xpPorDia = tipo === 'refeicao' ? qtdRefeicoes * XP_POR_REFEICAO : tipo === 'alimento' ? XP_POR_ALIMENTO : 0;
+  const xpPorDia = tipo === 'refeicao' ? qtdRefeicoes * XP_POR_REFEICAO : tipo === 'alimento' ? XP_POR_ALIMENTO : tipo === 'ausencia' ? XP_POR_AUSENCIA : 0;
   return { xpPorDia, xpTotal: xpPorDia * dias };
 }
 
-// Metas de refeição e de alimento são acompanhadas pelo sistema; a meta simples o pai marca na mão
+// Metas de refeição, de alimento e de ausência são acompanhadas pelo sistema; a meta simples o pai marca na mão
 export function ehAutomatica(meta: Pick<Meta, 'tipo'>): boolean {
-  return meta.tipo === 'refeicao' || meta.tipo === 'alimento';
+  return meta.tipo === 'refeicao' || meta.tipo === 'alimento' || meta.tipo === 'ausencia';
 }
 
 export interface DadosNovaMeta {
@@ -68,6 +69,7 @@ export interface DadosNovaMeta {
 // tipo: 'simples' (padrão), 'refeicao' ou 'alimento'
 // refeicao: usa tiposRefeicao (lista, ex: ['Almoço', 'Janta']), dias e dias
 // alimento: usa alimento (ex: 'Abóbora') e dias
+// ausencia: usa alimento (o que a criança deve ficar sem comer, ex: 'Nugget') e dias
 // O XP (por dia e total) e o progresso são calculados pelo sistema (calcularProgressoMeta)
 export async function addMeta({ filhoId, filhoNome, titulo, descricao, cor, recompensa, tipo = 'simples', tiposRefeicao, alimento, dias }: DadosNovaMeta): Promise<void> {
   const user = auth.currentUser;
@@ -82,7 +84,7 @@ export async function addMeta({ filhoId, filhoNome, titulo, descricao, cor, reco
     recompensa,
     tipo,
     ...(tipo === 'refeicao' ? { tiposRefeicao, dias, xpPorDia, xpTotal, diasCumpridos: 0, xpAtual: 0 } : {}),
-    ...(tipo === 'alimento' ? { alimento, dias, xpPorDia, xpTotal, diasCumpridos: 0, xpAtual: 0 } : {}),
+    ...(tipo === 'alimento' || tipo === 'ausencia' ? { alimento, dias, xpPorDia, xpTotal, diasCumpridos: 0, xpAtual: 0 } : {}),
     concluida: false,
     criadoEm: serverTimestamp()
   });
